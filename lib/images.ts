@@ -43,6 +43,23 @@ function toUrl(base: string, file: string): string {
   return `${base}${encodeURIComponent(file)}`;
 }
 
+/**
+ * หาไฟล์สำหรับ "ดาวน์โหลด" ตามชื่อ เช่น findDownload("document")
+ * รองรับนามสกุลกว้างกว่ารูปภาพ เพราะเอกสารมักเป็น .pdf
+ * แยกจาก EXTENSION เพื่อไม่ให้ไฟล์เอกสารหลุดเข้าไปในแกลเลอรีรูป
+ */
+const DOWNLOAD_EXTENSION = /\.(jpe?g|png|webp|avif|pdf)$/i;
+
+export function findDownload(name: string): string | null {
+  const target = name.toLowerCase();
+  const file = listFiles(IMAGE_DIR).find(
+    (f) =>
+      DOWNLOAD_EXTENSION.test(f) &&
+      f.replace(DOWNLOAD_EXTENSION, "").toLowerCase() === target,
+  );
+  return file ? toUrl("/images/", file) : null;
+}
+
 /** หาไฟล์ที่ชื่อ (ไม่รวมนามสกุล) ตรงกับที่ระบุ เช่น findImage("landing") */
 export function findImage(name: string): string | null {
   const target = name.toLowerCase();

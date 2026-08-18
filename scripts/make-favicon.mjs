@@ -1,14 +1,17 @@
 /**
- * สร้างไอคอนเว็บจาก public/images/iconweb.png
+ * สร้างไอคอนเว็บจาก assets/iconweb.png
  *   node scripts/make-favicon.mjs
  *
  * Next.js App Router จะหยิบ app/icon.png ไปใส่ <link rel="icon"> ให้เอง
- * และย่อไฟล์ต้นฉบับใน public/images ลงด้วย เพราะ 6250x6250 ใหญ่เกินจำเป็น
+ *
+ * ไฟล์ต้นฉบับอยู่นอก public/ โดยตั้งใจ — ของใน public/ ถูกอัปขึ้นเซิร์ฟเวอร์
+ * และเปิดให้ดาวน์โหลดได้ทุกไฟล์ ต้นฉบับ 5 MB จึงไม่ควรอยู่ที่นั่น
+ * ทั้งที่ไม่มีหน้าไหนเรียกใช้
  */
 import sharp from "sharp";
 import fs from "node:fs";
 
-const SOURCE = "public/images/iconweb.png";
+const SOURCE = "assets/iconweb.png";
 if (!fs.existsSync(SOURCE)) {
   console.error("ไม่พบไฟล์", SOURCE);
   process.exit(1);

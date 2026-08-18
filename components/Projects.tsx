@@ -18,7 +18,8 @@ export default function Projects() {
   }
 
   return (
-    <Section id="project" className="bg-white">
+    // seam: ไล่สีจาก mist ของ Certificates ลงมาหาขาว
+    <Section id="project" className="seam seam-from-mist bg-white">
       <header className="mx-auto max-w-2xl text-center">
         <Reveal>
           <p className="t-eyebrow">{project.eyebrow}</p>

@@ -36,6 +36,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# ต้นฉบับความละเอียดสูงสำหรับสร้าง favicon (assets/iconweb.png ~5MB)
+# ไม่ต้องเข้า git — ผลลัพธ์ที่เว็บใช้จริงคือ app/icon.png ซึ่งถูก commit ไว้แล้ว
+# ถ้าต้องสร้างไอคอนใหม่ ให้วางต้นฉบับกลับมาแล้วรัน node scripts/make-favicon.mjs
+/assets
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -13,7 +13,10 @@ type Props = {
 };
 
 /** ความยาวของ animation ตอนปิด ต้องตรงกับ .lb-closing ใน globals.css */
-const CLOSE_MS = 170;
+const CLOSE_MS = 220;
+
+/** ระยะนิ้วขั้นต่ำที่นับว่าเป็นการปัดเปลี่ยนรูป ไม่ใช่การแตะพลาด */
+const SWIPE_PX = 45;
 
 const ARROW_BASE =
   "flex h-12 w-12 items-center justify-center rounded-full border border-white/25 text-lg text-white transition-colors hover:border-cyan hover:text-cyan";
@@ -89,6 +92,32 @@ export default function Lightbox({
     step(delta);
   };
 
+  /* ── ปัดนิ้วเปลี่ยนรูปบนมือถือ ──
+     บนจอสัมผัส ปุ่มลูกศรเล็กและอยู่ไกลนิ้ว การปัดเป็นท่าที่คนคาดหวังอยู่แล้ว
+     จำตำแหน่งตอนแตะไว้ แล้ววัดระยะตอนปล่อย ถ้าเกิน SWIPE_PX จึงนับเป็นการปัด
+     แนวตั้งที่ขยับมากกว่าแนวนอนไม่นับ กันไม่ให้การเลื่อนจอกลายเป็นการเปลี่ยนรูป */
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.changedTouches[0];
+    touchStart.current = t ? { x: t.clientX, y: t.clientY } : null;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStart.current;
+    const t = e.changedTouches[0];
+    touchStart.current = null;
+    if (!start || !t || !many) return;
+
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < SWIPE_PX || Math.abs(dx) <= Math.abs(dy)) return;
+
+    // ปัดซ้าย = ดูรูปถัดไป (เนื้อหาเลื่อนตามนิ้ว)
+    e.stopPropagation();
+    step(dx < 0 ? 1 : -1);
+  };
+
   if (!current) return null;
 
   return (
@@ -102,8 +131,24 @@ export default function Lightbox({
       }}
       // แตะที่ไหนก็ได้เพื่อปิด (ปุ่มลูกศรกัน event ไว้เอง)
       onClick={requestClose}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       <div className="relative flex h-full w-full flex-col items-center justify-center gap-4 p-4 sm:p-8">
+        {/* ปุ่มปิดที่มองเห็นได้ — แตะพื้นหลังก็ปิดได้เหมือนเดิม แต่ต้องมีปุ่มจริง
+            ให้เห็น ไม่งั้นผู้ใช้ครั้งแรกไม่มีทางรู้ว่าออกยังไง */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            requestClose();
+          }}
+          aria-label="ปิดหน้าต่างรูปภาพ"
+          className={`${ARROW_BASE} lb-controls absolute top-2 right-2 z-10 sm:top-4 sm:right-4`}
+        >
+          <span aria-hidden="true">✕</span>
+        </button>
+
         <figure className="lb-figure relative min-h-0 w-full flex-1">
           <Image
             src={current.src}

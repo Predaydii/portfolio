@@ -8,40 +8,58 @@ import { footer } from "@/lib/content";
  */
 export default function Footer() {
   return (
-    <footer id="contact" className="relative z-10 bg-ink text-white/70">
-      <div className="mx-auto w-full max-w-[1200px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+    <footer
+      id="contact"
+      className="relative z-10 overflow-hidden bg-ink text-white/70"
+    >
+      {/* เส้นฟ้าบาง ๆ บนสุด — ทำให้ขอบขาว→ดำอ่านเป็น "เส้นแบ่งที่ตั้งใจ"
+          ไม่ใช่รอยต่อที่ดูเหมือนภาพแตก */}
+      <span
+        aria-hidden="true"
+        className="grad-brand absolute inset-x-0 top-0 h-px"
+      />
+      {/* แสงจาง ๆ จากมุมบนขวา ให้พื้นดำมีมิติ ไม่แบนตัน */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-32 right-[-10%] h-80 w-80 rounded-full bg-cyan/10 blur-3xl"
+      />
+
+      <div className="relative mx-auto w-full max-w-[1200px] px-5 py-16 sm:px-8 sm:py-20 lg:px-12">
+        {/* คอลัมน์ซ้ายกว้างกว่าเล็กน้อย ชื่อจึงได้พื้นที่หายใจ
+            เส้นคั่นแนวตั้งบนจอใหญ่ทำให้สองฝั่งแยกกันชัดโดยไม่ต้องเว้นห่างมาก */}
+        <div className="grid gap-12 lg:grid-cols-[1fr_auto_20rem] lg:gap-14">
           {/* ── ตัวตน ── */}
           <div>
             <Reveal>
-              <p className="font-display text-3xl font-extrabold text-white sm:text-4xl">
+              <p className="t-eyebrow text-cyan">Portfolio</p>
+
+              <p className="font-display mt-4 text-[clamp(1.9rem,4.2vw,2.75rem)] leading-[1.15] font-extrabold tracking-tight text-white">
                 {footer.name}
-                <span aria-hidden="true" className="ml-1 text-cyan">
-                  .
-                </span>
               </p>
 
-              <p className="font-display mt-3 text-base font-semibold text-white/80 sm:text-lg">
+              <p className="font-display mt-3 max-w-[34ch] text-base leading-relaxed font-semibold text-white/75">
                 {footer.role}
               </p>
 
-              <ul className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2">
-                {footer.skills.map((skill, i) => (
-                  <li key={skill} className="flex items-center gap-3">
-                    {i > 0 && (
-                      <span
-                        aria-hidden="true"
-                        className="h-1 w-1 rounded-full bg-cyan"
-                      />
-                    )}
-                    <span className="font-display text-sm font-semibold tracking-wide text-white/70">
-                      {skill}
-                    </span>
+              {/* ความถนัด — ทำเป็นชิปมีกรอบ อ่านง่ายกว่าข้อความคั่นจุด */}
+              <ul className="mt-6 flex flex-wrap gap-2">
+                {footer.skills.map((skill) => (
+                  <li
+                    key={skill}
+                    className="font-display rounded-full border border-white/15 px-3.5 py-1.5 text-xs font-semibold tracking-wide text-white/70"
+                  >
+                    {skill}
                   </li>
                 ))}
               </ul>
             </Reveal>
           </div>
+
+          {/* เส้นคั่นแนวตั้ง เฉพาะจอที่กว้างพอให้สองคอลัมน์อยู่ข้างกัน */}
+          <span
+            aria-hidden="true"
+            className="hidden w-px bg-gradient-to-b from-transparent via-white/15 to-transparent lg:block"
+          />
 
           {/* ── ช่องทางติดต่อ ── */}
           <Reveal delay={120}>
@@ -50,8 +68,42 @@ export default function Footer() {
                 {footer.contactHeading}
               </h2>
 
+              {/* อีเมลและเบอร์โทร — ป้ายกำกับตัวเล็กวางบนค่า ทำให้สแกนตาลงมาได้ตรง ๆ
+                  กดโทร/ส่งเมลได้ทันทีบนมือถือ */}
+              <dl className="mt-5 space-y-4">
+                {[
+                  {
+                    label: "Email",
+                    value: footer.email,
+                    href: `mailto:${footer.email}`,
+                  },
+                  {
+                    label: "Phone",
+                    value: footer.phone,
+                    href: `tel:${footer.phone.replace(/-/g, "")}`,
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="border-b border-white/10 pb-4 last:border-0 last:pb-0"
+                  >
+                    <dt className="font-display text-[0.65rem] tracking-[0.2em] text-white/40 uppercase">
+                      {item.label}
+                    </dt>
+                    <dd className="mt-1">
+                      <a
+                        href={item.href}
+                        className="font-display inline-block max-w-full truncate text-[0.95rem] font-semibold text-white transition-colors hover:text-cyan sm:text-base"
+                      >
+                        {item.value}
+                      </a>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+
               {/* ปุ่มลิงก์ไปยังแพลตฟอร์มต่าง ๆ */}
-              <ul className="mt-5 flex flex-wrap gap-3">
+              <ul className="mt-7 flex flex-wrap gap-2.5">
                 {footer.links.map((link) => (
                   <li key={link.label}>
                     <a
@@ -61,53 +113,28 @@ export default function Footer() {
                       {...(link.external
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className="hero-magnet flex h-12 w-12 items-center justify-center rounded-full border border-white/15 text-white/75 hover:border-cyan hover:text-cyan"
+                      className="hero-magnet flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/75 hover:border-cyan hover:text-cyan"
                     >
-                      <BrandIcon name={link.icon} className="h-5 w-5" />
+                      <BrandIcon name={link.icon} className="h-[1.15rem] w-[1.15rem]" />
                     </a>
                   </li>
                 ))}
               </ul>
-
-              {/* อีเมลและเบอร์โทร กดโทร/ส่งเมลได้ทันทีบนมือถือ */}
-              <dl className="mt-7 space-y-3">
-                <div className="flex flex-wrap items-baseline gap-x-3">
-                  <dt className="font-display w-16 text-xs tracking-[0.18em] text-white/45 uppercase">
-                    Email
-                  </dt>
-                  <dd>
-                    <a
-                      href={`mailto:${footer.email}`}
-                      className="font-display inline-block py-1.5 text-base font-semibold text-white transition-colors hover:text-cyan sm:text-lg"
-                    >
-                      {footer.email}
-                    </a>
-                  </dd>
-                </div>
-
-                <div className="flex flex-wrap items-baseline gap-x-3">
-                  <dt className="font-display w-16 text-xs tracking-[0.18em] text-white/45 uppercase">
-                    Phone
-                  </dt>
-                  <dd>
-                    <a
-                      href={`tel:${footer.phone.replace(/-/g, "")}`}
-                      className="font-display inline-block py-1.5 text-base font-semibold text-white transition-colors hover:text-cyan sm:text-lg"
-                    >
-                      {footer.phone}
-                    </a>
-                  </dd>
-                </div>
-              </dl>
             </section>
           </Reveal>
         </div>
       </div>
 
-      <div className="border-t border-white/10">
-        <p className="mx-auto w-full max-w-[1200px] px-5 py-5 text-xs text-white/60 sm:px-8 lg:px-12">
-          {footer.copyright}
-        </p>
+      <div className="relative border-t border-white/10">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-5 sm:px-8 lg:px-12">
+          <p className="text-xs text-white/50">{footer.copyright}</p>
+          <a
+            href="#home"
+            className="font-display text-xs font-semibold tracking-wide text-white/50 transition-colors hover:text-cyan"
+          >
+            กลับขึ้นด้านบน ↑
+          </a>
+        </div>
       </div>
     </footer>
   );

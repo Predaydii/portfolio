@@ -50,6 +50,14 @@ export default function Certificates() {
           <p className="mx-auto mt-5 max-w-[52ch] text-slate">
             {certificate.intro}
           </p>
+
+          {/* บอกวิธีใช้ให้ชัด — แถวที่วิ่งอยู่เองไม่ได้สื่อว่ากดได้ */}
+          <p className="font-display mt-5 inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-[0.8rem] text-slate shadow-card">
+            <span aria-hidden="true" className="text-cyan-deep">
+              ⤢
+            </span>
+            กดที่เกียรติบัตรเพื่อดูขนาดเต็ม
+          </p>
         </Reveal>
       </header>
 

@@ -53,9 +53,11 @@ export default function ProjectCard({ card, images }: Props) {
           </div>
         )}
 
+        {/* นับเฉพาะภาพ "เพิ่มเติม" ไม่รวมรูปหลักที่เห็นอยู่บนการ์ดแล้ว
+            บอกสิ่งที่จะได้เพิ่มเมื่อกด ตรงกว่าการบอกจำนวนรวมทั้งหมด */}
         {main && extras > 0 && (
           <span className="font-display absolute top-3 left-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.7rem] font-semibold text-white backdrop-blur-sm">
-            {images.length} รูป
+            {extras} ภาพเพิ่มเติม
           </span>
         )}
 

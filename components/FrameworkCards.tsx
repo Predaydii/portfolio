@@ -6,8 +6,9 @@ import { findImageIn } from "@/lib/images";
 /** การ์ด 4 ขั้นของ D-D-D-I — ไอคอนอ่านจาก public/images/icon/<ชื่อขั้น> */
 export default function FrameworkCards() {
   return (
-    // มือถือ 2 ใบต่อแถว จอใหญ่เรียง 4 ใบในแถวเดียว
-    <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+    /* มือถือแคบ (<420px) เรียง 1 ใบต่อแถว — 2 ใบต่อแถวทำให้ไอคอนที่คร่อมขอบซ้าย
+       ไปเบียดชื่อขั้นจนอ่านไม่ออก · จากนั้น 2 ใบ → 4 ใบในแถวเดียวบนจอใหญ่ */
+    <ul className="mt-8 grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:gap-5 lg:grid-cols-4">
       {framework.steps.map((step, i) => {
         const icon = findImageIn("icon", step.name);
 
@@ -15,7 +16,7 @@ export default function FrameworkCards() {
           <li key={step.name}>
             <Reveal delay={i * 80} className="h-full">
               <div
-                className="h-full rounded-2xl border border-line p-3 shadow-card sm:rounded-3xl sm:p-4"
+                className="step-card h-full rounded-2xl border border-line p-3 shadow-card sm:rounded-3xl sm:p-4"
                 style={{
                   background: `linear-gradient(to bottom, #ffffff 42%, ${step.tint} 100%)`,
                 }}
@@ -24,13 +25,13 @@ export default function FrameworkCards() {
                     ใช้ min-h แทนความสูงตายตัว และให้ข้อความย่อขนาดตามความกว้างการ์ด
                     ไม่งั้นชื่อขั้นจะล้นออกนอกแถบสีตอนการ์ดแคบ */}
                 <div
-                  className="relative flex min-h-11 items-center rounded-xl py-1.5 pr-2 pl-12 sm:min-h-13 sm:rounded-2xl sm:pr-3 sm:pl-16"
+                  className="step-bar relative flex min-h-11 items-center rounded-xl py-1.5 pr-2 pl-12 sm:min-h-13 sm:rounded-2xl sm:pr-3 sm:pl-16"
                   style={{
                     background: `linear-gradient(100deg, ${step.color} 0%, ${step.colorLight} 100%)`,
                   }}
                 >
                   <span
-                    className="absolute top-1/2 -left-1.5 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_4px_14px_-4px_rgba(1,0,62,0.35)] sm:-left-2 sm:h-14 sm:w-14"
+                    className="step-icon absolute top-1/2 -left-1.5 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white shadow-[0_4px_14px_-4px_rgba(1,0,62,0.35)] sm:-left-2 sm:h-14 sm:w-14"
                     style={{ outline: `2px solid ${step.color}` }}
                   >
                     {icon ? (
@@ -57,13 +58,13 @@ export default function FrameworkCards() {
                   {/* flex-1 + text-center ทำให้ชื่อขั้นอยู่กึ่งกลางของพื้นที่ที่เหลือ
                       หลังหักส่วนที่ไอคอนกินไป ระยะซ้าย-ขวาจึงเท่ากันทุกใบ
                       ไม่ว่าชื่อจะสั้นยาวต่างกันแค่ไหน */}
-                  <span className="font-display min-w-0 flex-1 text-center text-[0.9rem] leading-tight font-extrabold text-white sm:text-lg lg:text-xl">
+                  <span className="font-display min-w-0 flex-1 text-center text-base leading-tight font-extrabold text-white sm:text-lg lg:text-xl">
                     {step.name}
                   </span>
                 </div>
 
                 <p
-                  className="font-display mt-3 text-center text-base font-bold sm:mt-4 sm:text-xl"
+                  className="step-tagline font-display mt-3 text-center text-base font-bold sm:mt-4 sm:text-xl"
                   style={{ color: step.color }}
                 >
                   {step.tagline}

@@ -8,6 +8,21 @@ import { findImage } from "@/lib/images";
 const WIRE_PATH =
   "M210 26 L370 130 L392 344 L232 454 L58 372 L28 150 Z";
 
+/** จุดดาวกะพริบกระจายทั่วฉากหลัง — ตำแหน่งคงที่ ไม่สุ่ม เพื่อไม่ให้ SSR/CSR ต่างกัน */
+const STARS = [
+  { top: "14%", left: "12%", size: 5, time: "3.6s", delay: "0s" },
+  { top: "28%", left: "31%", size: 3, time: "4.8s", delay: "0.7s" },
+  { top: "9%", left: "58%", size: 4, time: "4.2s", delay: "1.4s" },
+  { top: "22%", left: "88%", size: 3, time: "5.4s", delay: "0.3s" },
+  { top: "46%", left: "5%", size: 4, time: "4.4s", delay: "1.1s" },
+  { top: "62%", left: "24%", size: 3, time: "5.1s", delay: "2s" },
+  { top: "74%", left: "68%", size: 5, time: "3.9s", delay: "0.9s" },
+  { top: "84%", left: "42%", size: 3, time: "4.7s", delay: "1.7s" },
+  { top: "58%", left: "94%", size: 4, time: "5.6s", delay: "0.5s" },
+  { top: "38%", left: "76%", size: 3, time: "4.1s", delay: "2.3s" },
+];
+
+
 export default function Hero() {
   // อ่านจาก public/images/landing.<jpg|png|webp|avif> — ไม่มีไฟล์ก็ขึ้น placeholder
   const photo = findImage("landing");
@@ -22,11 +37,17 @@ export default function Hero() {
     /* sticky ตรึง Landing ไว้ แล้วปล่อยให้ Statement of Purpose เลื่อนขึ้นมาทับตอน scroll
        HeroStage เป็น client component ที่คอยส่งตำแหน่งเมาส์ให้ชั้นต่าง ๆ ใช้ */
     <HeroStage
-      id="home"
-      className="tech-canvas sticky top-0 z-0 flex min-h-[100svh] flex-col justify-center overflow-hidden pt-24 pb-10 sm:pt-28 sm:pb-14"
+      id="hero"
+      /* max-h คู่กับ min-h: Hero เป็น sticky จึงต้องไม่สูงเกิน 1 หน้าจอเด็ดขาด
+         ไม่งั้นเนื้อหาส่วนล่างจะถูก About เลื่อนขึ้นมาทับจนไม่มีวันเห็น */
+      className="tech-canvas sticky top-0 z-0 flex h-[100svh] max-h-[100svh] flex-col justify-center overflow-hidden pt-20 pb-16 sm:pt-24 sm:pb-20"
     >
       {/* ── ฉากหลังธีมเทคโนโลยี ── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        {/* ชั้นแสงหลากเฉดที่ลอยไปมา — กินพื้นที่เกินขอบไว้ให้ transform มีที่ขยับ
+            โดยไม่เผยขอบว่างที่มุมจอ */}
+        <div className="tech-aura absolute inset-[-10%]" />
+
         {/* พื้นตารางมุมมองลึกไหลเข้าหาคนดู */}
         <div className="tech-floor absolute inset-x-0 bottom-0 h-[46%]" />
 
@@ -40,44 +61,83 @@ export default function Hero() {
         <div className="anim-drift-a absolute -top-28 -right-24 h-[30rem] w-[30rem] rounded-full bg-cyan/25 blur-3xl" />
         <div className="anim-drift-b absolute -bottom-32 -left-24 h-[26rem] w-[26rem] rounded-full bg-ink/12 blur-3xl" />
 
-        {/* รูปทรงโครงลวดลอยมุมจอ */}
+        {/* แถบแสงเฉียงกวาดผ่านทั้งฉาก */}
+        <div className="hero-beam anim-aurora absolute -inset-x-1/4 top-[22%] h-64 -rotate-6" />
+
+        {/* จุดดาวกะพริบกระจายทั่วฉาก */}
+        {STARS.map((star, i) => (
+          <span
+            key={i}
+            className="anim-twinkle hero-parallax absolute rounded-full bg-cyan-deep"
+            style={
+              {
+                top: star.top,
+                left: star.left,
+                height: star.size,
+                width: star.size,
+                "--twinkle-time": star.time,
+                "--twinkle-delay": star.delay,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+
+        {/* ลายวงจรเส้นประวิ่ง — แสดงทุกขนาดจอ รวมมือถือ */}
         <svg
-          viewBox="0 0 120 120"
-          className="anim-wire hero-parallax absolute top-[18%] left-[6%] h-16 w-16 text-ink/15 sm:h-24 sm:w-24"
-          style={{ "--wire-time": "52s" } as React.CSSProperties}
+          viewBox="0 0 300 200"
+          className="absolute bottom-[10%] left-[3%] h-24 w-36 text-cyan-deep/40 sm:h-32 sm:w-48"
           fill="none"
         >
-          <polygon
-            points="60,8 112,38 112,82 60,112 8,82 8,38"
+          <path
+            className="anim-trace"
+            style={{ "--trace-time": "14s" } as React.CSSProperties}
+            d="M8 150 H80 L110 120 H190 L220 90 H292"
             stroke="currentColor"
-            strokeWidth="3"
+            strokeWidth="2"
           />
+          <path
+            className="anim-trace"
+            style={{ "--trace-time": "18s" } as React.CSSProperties}
+            d="M8 96 H60 L92 64 H176"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+          <circle cx="80" cy="150" r="4" fill="currentColor" />
+          <circle cx="190" cy="120" r="4" fill="currentColor" />
+          <circle cx="60" cy="96" r="4" fill="currentColor" />
         </svg>
+
+        {/* ลายวงจรอีกชุดฝั่งขวาบน — ให้ฉากสมดุลหลังเอารูปทรงเรขาคณิตออก */}
         <svg
-          viewBox="0 0 120 120"
-          className="anim-wire anim-wire-reverse hero-parallax absolute right-[8%] bottom-[16%] h-14 w-14 text-cyan-deep/30 sm:h-20 sm:w-20"
-          style={{ "--wire-time": "38s" } as React.CSSProperties}
+          viewBox="0 0 300 200"
+          className="absolute top-[16%] right-[3%] h-24 w-36 rotate-180 text-cyan-deep/30 sm:h-32 sm:w-48"
           fill="none"
         >
-          <rect
-            x="14"
-            y="14"
-            width="92"
-            height="92"
-            rx="18"
+          <path
+            className="anim-trace"
+            style={{ "--trace-time": "16s" } as React.CSSProperties}
+            d="M8 150 H74 L104 120 H184 L214 92 H292"
             stroke="currentColor"
-            strokeWidth="3"
+            strokeWidth="2"
           />
+          <circle cx="74" cy="150" r="4" fill="currentColor" />
+          <circle cx="184" cy="120" r="4" fill="currentColor" />
         </svg>
+
       </div>
 
       <div className="relative mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-12">
-        <div className="grid items-center gap-9 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
-          {/* ── ข้อความฝั่งซ้าย ── จอเล็กลงมาอยู่ใต้รูปและจัดกึ่งกลาง */}
-          <div className="order-2 text-center lg:order-1 lg:text-left">
+        <div className="grid items-center gap-6 sm:gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+          {/* ── ข้อความฝั่งซ้าย ── จอเล็กลงมาอยู่ใต้รูปและจัดกึ่งกลาง
+              z-20 ยกทั้งคอลัมน์ขึ้นชั้นหน้า "I'm Day" จึงทับรูปได้เวลาล้นไปทางขวา */}
+          <div className="relative z-20 order-2 text-center lg:order-1 lg:text-left">
             {/* แยก anim-rise ไว้ชั้นนอก เพราะทั้งสองคลาสตั้งค่า animation
-                ถ้าใส่รวมกัน ตัวที่มาทีหลังใน stylesheet จะทับเอฟเฟกต์ไล่สีทิ้ง */}
-            <div className="anim-rise" style={{ animationDelay: "100ms" }}>
+                ถ้าใส่รวมกัน ตัวที่มาทีหลังใน stylesheet จะทับเอฟเฟกต์ไล่สีทิ้ง
+                จอใหญ่ปล่อยให้ล้นออกไปทางขวาได้ (w-max) ตัวอักษรจึงพาดทับรูป */}
+            <div
+              className="anim-rise lg:w-max"
+              style={{ animationDelay: "100ms" }}
+            >
               <p className="hero-lead">
                 {profile.greeting} {profile.name}
               </p>
@@ -115,7 +175,7 @@ export default function Hero() {
             </h1>
 
             <p
-              className="anim-rise font-display mt-4 text-lg font-bold text-ink sm:text-xl"
+              className="anim-rise font-display mt-3 text-base font-bold text-ink sm:text-lg lg:text-xl"
               style={{ animationDelay: "620ms" }}
             >
               {profile.fullName}
@@ -126,20 +186,20 @@ export default function Hero() {
             </p>
 
             <div
-              className="anim-rise mt-5 max-w-[46ch] max-lg:mx-auto"
+              className="anim-rise mt-4 max-w-[46ch] max-lg:mx-auto"
               style={{ animationDelay: "700ms" }}
             >
-              <p className="font-display text-lg leading-snug font-bold text-ink sm:text-xl">
+              <p className="font-display text-base leading-snug font-bold text-ink sm:text-lg lg:text-xl">
                 {profile.motto}
               </p>
-              <p className="mt-2 text-base leading-relaxed text-slate">
+              <p className="mt-1.5 text-sm leading-relaxed text-slate sm:text-base">
                 {profile.mottoEn}
               </p>
             </div>
 
             <nav
               aria-label="ช่องทางติดต่อ"
-              className="anim-rise mt-7"
+              className="anim-rise mt-5"
               style={{ animationDelay: "780ms" }}
             >
               <ul className="flex items-center justify-center gap-2.5 lg:justify-start">
@@ -164,7 +224,19 @@ export default function Hero() {
 
           {/* ── รูปฝั่งขวา พร้อมโครงลวดหมุนอยู่ด้านหลัง ── */}
           <div className="order-1 lg:order-2">
-            <div className="relative mx-auto w-56 sm:w-72 lg:mr-0 lg:ml-auto lg:w-[24rem]">
+            <div className="relative mx-auto w-44 sm:w-60 lg:mr-0 lg:ml-auto lg:w-[21rem]">
+              {/* วงแหวนประหมุนสวนทางกัน — ให้รูปรู้สึกเป็นศูนย์กลางของฉาก */}
+              <span
+                aria-hidden="true"
+                className="hero-orbit absolute inset-[-16%]"
+                style={{ "--orbit-time": "78s" } as React.CSSProperties}
+              />
+              <span
+                aria-hidden="true"
+                className="hero-orbit hero-orbit-reverse absolute inset-[-28%]"
+                style={{ "--orbit-time": "96s" } as React.CSSProperties}
+              />
+
               {/* โครงลวดสองชั้นหมุนสวนทางกัน */}
               <svg
                 viewBox="0 0 420 480"
@@ -210,7 +282,7 @@ export default function Hero() {
                       alt={profile.photoAlt}
                       fill
                       priority
-                      sizes="(min-width: 1024px) 24rem, (min-width: 640px) 18rem, 14rem"
+                      sizes="(min-width: 1024px) 21rem, (min-width: 640px) 15rem, 11rem"
                       className="object-contain"
                     />
                   ) : (
@@ -233,6 +305,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
     </HeroStage>
   );
 }

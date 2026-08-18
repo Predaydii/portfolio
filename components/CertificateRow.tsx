@@ -76,7 +76,7 @@ export default function CertificateRow({
                   onClick={() => setOpenAt(index)}
                   tabIndex={isClone ? -1 : undefined}
                   aria-label={`ดูเกียรติบัตรขนาดเต็ม: ${image.alt}`}
-                  className={`group/cert relative block cursor-zoom-in overflow-hidden rounded-xl border border-line bg-white shadow-card transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift ${heightClass} ${A4_LANDSCAPE}`}
+                  className={`cert-card group/cert relative block cursor-zoom-in overflow-hidden rounded-xl border border-line bg-white shadow-card ${heightClass} ${A4_LANDSCAPE}`}
                 >
                   <Image
                     src={image.src}
@@ -84,8 +84,18 @@ export default function CertificateRow({
                     fill
                     loading="lazy"
                     sizes="(min-width: 1024px) 360px, (min-width: 640px) 300px, 240px"
-                    className="object-cover transition-transform duration-500 group-hover/cert:scale-[1.04]"
+                    className="object-cover transition-transform duration-700 ease-out group-hover/cert:scale-[1.07]"
                   />
+
+                  {/* ไอคอนขยายโผล่ตอนชี้ — บอกว่ากดแล้วดูเต็มจอได้ */}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 flex items-center justify-center bg-ink/35 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover/cert:opacity-100 group-focus-visible/cert:opacity-100"
+                  >
+                    <span className="flex h-10 w-10 scale-75 items-center justify-center rounded-full bg-white/95 text-base text-ink shadow-lift transition-transform duration-300 group-hover/cert:scale-100 group-focus-visible/cert:scale-100">
+                      ⤢
+                    </span>
+                  </span>
                 </button>
               </li>
             );

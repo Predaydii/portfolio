@@ -66,38 +66,25 @@
 
 /* ── Reusable pieces ──────────────────────────────────────────────────── */
 @layer components {
-  /* Type scale — ลื่นไหลตามความกว้างจอด้วย clamp() */
-  /* ขนาดถูกจำกัดไว้ให้ชื่อภาษาไทยอยู่ในบรรทัดเดียวได้ทุกความกว้างจอ
-     จุดที่คับที่สุดคือ 1024px ซึ่งเป็นช่วงที่ Landing เพิ่งแตกเป็น 2 คอลัมน์ */
-  .t-hero {
-    font-family: var(--font-display);
-    font-size: clamp(2.25rem, 5.2vw, 4.25rem);
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: -0.03em;
-  }
-
-  /* ── ตัวอักษรของหน้าแรก ──
-     บรรทัดบนเป็นตัวเอียงบาง ๆ ส่วนคำใหญ่กลางหน้าเป็นตัวหนามาก
-     ทั้งคู่วางซ้อนอยู่ "หลัง" รูป จึงถูกรูปบังบางส่วนโดยตั้งใจ */
-  .hero-script {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: clamp(2rem, 6.5vw, 4.75rem);
-    line-height: 1;
-    letter-spacing: -0.025em;
-    color: var(--color-ink);
-  }
-
   /* บรรทัดนำหน้าชื่อ ("I'm Day") — ตัวใหญ่เอียง ไล่สีน้ำเงิน→ฟ้าเข้มวิ่งไปมา
      จุดสีอ่อนสุดหยุดที่ cyan-deep ไม่ใช่ cyan สด ตัวอักษรจึงยังอ่านออกบนพื้นขาว */
   .hero-lead {
     font-family: var(--font-display);
     font-style: italic;
     font-weight: 600;
-    font-size: clamp(1.35rem, 3.4vw, 2.75rem);
-    line-height: 1.2;
+    /* ตัวเด่นที่สุดของหน้าแรก — ใหญ่กว่าชื่ออังกฤษด้านล่าง และวางทับอยู่ชั้นหน้า
+       จำกัดด้วย vh ด้วย เพราะ Hero เป็น sticky ที่สูงได้ไม่เกิน 1 หน้าจอ
+       ถ้าเนื้อหาสูงเกิน ส่วนล่างจะถูก About เลื่อนมาทับจนไม่มีวันเห็น */
+    font-size: min(clamp(3rem, 8.5vw, 6.5rem), 12vh);
+    /* ตัวเอียงตัวใหญ่มีหางลง (y) และเอนไปทางขวา ถ้า line-height แคบหรือไม่เผื่อ
+       ระยะขอบ กล่องข้อความจะตัดหางทิ้ง — เห็นชัดเป็นพิเศษเพราะใช้
+       background-clip:text ซึ่งตัดสีตามกล่อง ไม่ใช่ตามรูปร่างตัวอักษร */
+    line-height: 1.22;
+    /* เผื่อขอบทุกด้าน: บนไว้ให้ ' ของ I'm, ล่างไว้ให้หางของ y,
+       ขวาไว้ให้ตัวเอนที่ล้ำออกไปกว่าความกว้างที่ browser คำนวณ */
+    padding-top: 0.1em;
+    padding-right: 0.12em;
+    padding-bottom: 0.08em;
     letter-spacing: -0.02em;
     background: linear-gradient(
       100deg,
@@ -118,8 +105,12 @@
     font-family: var(--font-display);
     font-weight: 800;
     /* --mega-scale ถูกคำนวณจากความยาวของ headline ใน Hero.tsx
-       คำยาวขึ้นตัวอักษรจะเล็กลงเอง จึงไม่มีวันล้นออกนอกจอ */
-    font-size: calc(clamp(2.25rem, 7vw, 5.5rem) * var(--mega-scale, 1));
+       คำยาวขึ้นตัวอักษรจะเล็กลงเอง จึงไม่มีวันล้นออกนอกจอ
+       ส่วน vh คุมความสูงไว้ไม่ให้เนื้อหาทั้งชุดล้นออกนอก sticky viewport */
+    font-size: min(
+      calc(clamp(2.25rem, 7vw, 5.5rem) * var(--mega-scale, 1)),
+      8.6vh
+    );
     line-height: 0.88;
     letter-spacing: -0.05em;
     /* ไล่สีจบที่ cyan-deep ไม่ใช่ cyan สด เพื่อให้ยังอ่านออกบนพื้นขาว
@@ -140,47 +131,34 @@
 
   /* ── ฉากหลังธีมเทคโนโลยีโทนสว่างของหน้าแรก ──
      ฐานเป็นขาวนวล แล้วไล่แสงหลายเฉด (คราม ฟ้า ม่วง) ไม่ใช่ฟ้าเฉดเดียวเหมือนเดิม */
+  /* ฐานเป็นไล่สีนิ่ง ๆ ไม่มี animation — วาดครั้งเดียวจบ */
   .tech-canvas {
+    background: linear-gradient(180deg, #ffffff 0%, #fafcff 55%, #f2f7fd 100%);
+  }
+
+  /* ชั้นแสงหลากเฉดที่ลอยไปมาช้า ๆ
+     ขยับด้วย transform (เบราว์เซอร์ยกขึ้น GPU layer ได้) แทนการขยับ
+     background-position ซึ่งบังคับให้วาดพื้นหลังเต็มจอใหม่ทุกเฟรม
+     — เป็นจุดที่กินแรงเครื่องมากที่สุดของหน้าแรก */
+  .tech-aura {
     background:
       radial-gradient(58rem 42rem at 82% 6%, rgba(8, 218, 255, 0.24), transparent 62%),
       radial-gradient(50rem 38rem at 6% 70%, rgba(10, 58, 122, 0.16), transparent 64%),
       radial-gradient(44rem 34rem at 96% 92%, rgba(1, 0, 62, 0.12), transparent 60%),
-      radial-gradient(38rem 30rem at 40% 108%, rgba(8, 218, 255, 0.16), transparent 62%),
-      linear-gradient(180deg, #ffffff 0%, #fafcff 55%, #f2f7fd 100%);
-    background-size:
-      170% 170%,
-      170% 170%,
-      170% 170%,
-      170% 170%,
-      100% 100%;
-    animation: tech-drift 32s ease-in-out infinite;
+      radial-gradient(38rem 30rem at 40% 108%, rgba(8, 218, 255, 0.16), transparent 62%);
+    animation: aura-drift 32s ease-in-out infinite;
   }
 
-  @keyframes tech-drift {
+  @keyframes aura-drift {
     0%,
     100% {
-      background-position:
-        100% 0%,
-        0% 60%,
-        100% 100%,
-        40% 100%,
-        0 0;
+      transform: translate3d(0, 0, 0) scale(1);
     }
     33% {
-      background-position:
-        70% 24%,
-        26% 34%,
-        76% 82%,
-        14% 78%,
-        0 0;
+      transform: translate3d(-2.5%, 2%, 0) scale(1.06);
     }
     66% {
-      background-position:
-        88% 8%,
-        4% 84%,
-        94% 68%,
-        66% 92%,
-        0 0;
+      transform: translate3d(2.5%, -1.5%, 0) scale(1.03);
     }
   }
 
@@ -276,54 +254,217 @@
     transform: translateY(-3px) scale(1.03);
   }
 
-  /* ตัวอักษรโครงร่างขนาดยักษ์ที่วิ่งเป็นแถบอยู่หลังสุด — ใช้เป็นพื้นผิว ไม่ใช่ข้อความให้อ่าน */
-  .hero-ghost {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: clamp(3rem, 11vw, 9rem);
-    line-height: 1;
-    letter-spacing: -0.04em;
-    white-space: nowrap;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(1, 0, 62, 0.14);
+  /* ── ชิ้นตกแต่งพื้นหลังหน้าแรก ────────────────────────────────────────── */
+
+  /* วงแหวนประซ้อนรอบรูป หมุนคนละความเร็วให้เกิดมิติ */
+  .hero-orbit {
+    border-radius: 9999px;
+    border: 1px dashed rgba(1, 0, 62, 0.16);
+    animation: wire-spin var(--orbit-time, 70s) linear infinite;
   }
 
-  /* คำความสามารถที่วางไว้หลังรูป — ตัวใหญ่และสีจางพอที่จะเห็นแต่ไม่แย่งสายตา */
-  .hero-keyword {
-    font-family: var(--font-display);
-    font-size: clamp(0.95rem, 2.2vw, 1.85rem);
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(1, 0, 62, 0.34);
+  .hero-orbit-reverse {
+    animation-direction: reverse;
   }
 
-  /* คำที่ไหลขึ้นวนไม่รู้จบ — สูงเท่าบรรทัดเดียว ที่เหลือถูกซ่อน */
-  .word-scroll {
-    display: inline-block;
-    height: 1.7em;
-    overflow: hidden;
-    vertical-align: bottom;
-  }
-
-  .word-scroll-track {
-    display: flex;
-    flex-direction: column;
-    animation: word-scroll linear infinite;
-  }
-
-  .word-scroll-track > span {
-    display: flex;
-    height: 1.7em;
-    align-items: center;
-    white-space: nowrap;
-  }
-
-  @keyframes word-scroll {
-    to {
-      transform: translateY(-50%);
+  /* จุดดาวกะพริบ — วางกระจายเป็นกลุ่มดาวหลังเนื้อหา */
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.15;
+      transform: scale(0.7);
+    }
+    50% {
+      opacity: 0.85;
+      transform: scale(1);
     }
   }
+
+  .anim-twinkle {
+    animation: twinkle var(--twinkle-time, 4s) ease-in-out
+      var(--twinkle-delay, 0s) infinite;
+  }
+
+  /* แถบแสงเฉียงกวาดผ่านฉากหลัง ให้พื้นที่ว่างมีจังหวะ */
+  .hero-beam {
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(8, 218, 255, 0.16) 45%,
+      rgba(8, 218, 255, 0.05) 62%,
+      transparent 100%
+    );
+    filter: blur(28px);
+  }
+
+  /* วงจรอิเล็กทรอนิกส์เส้นบาง — เส้นประวิ่งไปตามราง */
+  @keyframes trace-run {
+    to {
+      stroke-dashoffset: -240;
+    }
+  }
+
+  .anim-trace {
+    stroke-dasharray: 6 14;
+    animation: trace-run var(--trace-time, 12s) linear infinite;
+  }
+
+  /* ── ตัวช่วยเลื่อนหน้า ─────────────────────────────────────────────────── */
+
+  /* ── การ์ด 4 ขั้นของ D-D-D-I ────────────────────────────────────────────
+     ชี้แล้วยกขึ้นพร้อมเงาลึกขึ้น ไอคอนเด้งโต แถบสีหัวการ์ดกว้างขึ้นเล็กน้อย
+     สีของแต่ละขั้นถูกกำหนดเป็น inline style จาก content.ts จึงคุมได้แค่
+     ระยะ/เงา/ขนาด ที่นี่ — สีปล่อยให้ไฟล์เนื้อหาเป็นเจ้าของเหมือนเดิม */
+  .step-card {
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .step-card:hover,
+  .step-card:focus-within {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  /* ไอคอนวงกลมที่คร่อมขอบซ้าย — เด้งโตและหมุนนิดหน่อย */
+  .step-icon {
+    transition: transform 460ms cubic-bezier(0.34, 1.3, 0.5, 1);
+  }
+
+  .step-card:hover .step-icon {
+    transform: translateY(-50%) scale(1.12) rotate(-6deg);
+  }
+
+  /* แถบสีหัวการ์ด — ยืดออกทางขวาเล็กน้อยให้รู้สึกตอบสนอง */
+  .step-bar {
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: left center;
+  }
+
+  .step-card:hover .step-bar {
+    transform: scaleX(1.02);
+  }
+
+  /* บรรทัดสรุปใต้แถบสี — ขยับขึ้นรับกับการ์ดที่ลอย */
+  .step-tagline {
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .step-card:hover .step-tagline {
+    transform: translateY(-2px);
+  }
+
+  /* ── ปุ่มที่ต้องดึงสายตา (อ่านต่อ / ดาวน์โหลดเอกสาร) ────────────────────
+     วงแหวนเต้นเป็นจังหวะรอบปุ่ม + แสงกวาดผ่านหน้าปุ่ม
+     ทั้งคู่อยู่บน pseudo-element จึงไม่แตะ layout ของปุ่มเลย */
+  .btn-attract {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* แสงกวาดจากซ้ายไปขวาเป็นระยะ */
+  .btn-attract::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      100deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.45) 50%,
+      transparent 65%
+    );
+    background-size: 280% 100%;
+    animation: btn-sheen 3.6s ease-in-out infinite;
+  }
+
+  @keyframes btn-sheen {
+    0% {
+      background-position: 160% 0;
+    }
+    55%,
+    100% {
+      background-position: -60% 0;
+    }
+  }
+
+  /* วงแหวนฟ้าที่ขยายออกแล้วจางหาย เหมือนคลื่นน้ำ */
+  .btn-attract::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0 rgba(8, 218, 255, 0.55);
+    animation: btn-ripple 2.8s ease-out infinite;
+  }
+
+  @keyframes btn-ripple {
+    0% {
+      box-shadow: 0 0 0 0 rgba(8, 218, 255, 0.5);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 14px rgba(8, 218, 255, 0);
+    }
+  }
+
+  /* ชี้เมาส์แล้วหยุดเรียกร้องความสนใจ — ผู้ใช้เจอปุ่มแล้ว ไม่ต้องกวักมืออีก */
+  .btn-attract:hover::before,
+  .btn-attract:hover::after {
+    animation-play-state: paused;
+  }
+
+  /* ── รอยต่อระหว่าง section ──────────────────────────────────────────────
+     สีพื้นของแต่ละ section ต่างกัน (ขาว ↔ mist ↔ ink) ถ้าชนกันตรง ๆ จะเห็นเป็น
+     เส้นคมพาดขวางจอ ดูเหมือนภาพแตกมากกว่าการเปลี่ยนหัวข้อ
+     จึงปูแถบไล่สีจาก "สีของ section ก่อนหน้า" ลงมาจางหายในสีของตัวเอง */
+  .seam {
+    position: relative;
+  }
+
+  .seam::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 8rem;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ต่อจาก section พื้นขาว */
+  .seam-from-white::before {
+    background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0));
+  }
+
+  /* ต่อจาก section พื้น mist */
+  .seam-from-mist::before {
+    background: linear-gradient(to bottom, #f4f6fa, rgba(244, 246, 250, 0));
+  }
+
+  /* เนื้อหาต้องอยู่เหนือแถบไล่สี ไม่งั้นตัวหนังสือช่วงหัว section จะถูกบัง */
+  .seam > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ปุ่มกลับขึ้นบน — โผล่มาเมื่อเลื่อนลงไปไกลแล้ว */
+  .to-top {
+    transition:
+      opacity 320ms ease,
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 260ms ease;
+  }
+
+  .to-top-hidden {
+    opacity: 0;
+    transform: translateY(14px) scale(0.9);
+    pointer-events: none;
+  }
+
 
   .t-section {
     font-family: var(--font-display);
@@ -361,11 +502,18 @@
     background: linear-gradient(135deg, #01003e 0%, #0a3a7a 55%, #08daff 100%);
   }
 
+  /* ข้อความไล่สี — background-clip:text ตัดสีตาม "กล่อง" ไม่ใช่รูปร่างตัวอักษร
+     ส่วนของตัวอักษรที่ล้นกล่องจึงไม่ได้สีและหายไปเลย
+     ภาษาไทยซ้อนสระบน+วรรณยุกต์ได้ถึง 2 ชั้น และมีสระล่าง จึงต้องเผื่อระยะ
+     มากกว่าภาษาอังกฤษ ไม่งั้นหัวข้ออย่าง "ทุกคนสอนผม" จะโดนตัดหัวตัดหาง */
   .grad-text {
     background: linear-gradient(120deg, #01003e 0%, #17246b 40%, #08daff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    padding-top: 0.12em;
+    padding-bottom: 0.12em;
+    padding-right: 0.06em;
   }
 
   .grad-rail {
@@ -388,6 +536,9 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    /* เผื่อระยะให้สระบน-ล่างของภาษาไทย ด้วยเหตุผลเดียวกับ .grad-text */
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
     animation: shimmer 12s ease-in-out infinite;
   }
 
@@ -454,69 +605,6 @@
     );
   }
 
-  .grad-mesh {
-    background:
-      radial-gradient(72rem 46rem at 50% 116%, rgba(8, 218, 255, 0.30), transparent 64%),
-      radial-gradient(50rem 34rem at 94% -8%, rgba(8, 218, 255, 0.24), transparent 60%),
-      radial-gradient(46rem 32rem at -6% 2%, rgba(1, 0, 62, 0.11), transparent 64%),
-      radial-gradient(40rem 30rem at 6% 66%, rgba(8, 218, 255, 0.15), transparent 66%),
-      #ffffff;
-  }
-
-  /* ทำให้ก้อนสีในพื้นหลังค่อย ๆ เลื่อนไปมา
-     ต้องขยาย background-size ให้ใหญ่กว่ากล่อง การเลื่อน background-position ถึงจะเห็นผล */
-  .grad-mesh-anim {
-    background-size:
-      170% 170%,
-      170% 170%,
-      170% 170%,
-      170% 170%;
-    animation: mesh-shift 30s ease-in-out infinite;
-  }
-
-  @keyframes mesh-shift {
-    0%,
-    100% {
-      background-position:
-        50% 100%,
-        100% 0%,
-        0% 0%,
-        0% 60%;
-    }
-    33% {
-      background-position:
-        28% 82%,
-        72% 26%,
-        30% 18%,
-        22% 40%;
-    }
-    66% {
-      background-position:
-        74% 94%,
-        88% 6%,
-        8% 34%,
-        0% 84%;
-    }
-  }
-
-  /* ตารางเส้นจาง ๆ เพิ่มโครงให้พื้นหลังดูแน่นขึ้น โดยจางหายที่ขอบด้วย mask */
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, rgba(1, 0, 62, 0.055) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(1, 0, 62, 0.055) 1px, transparent 1px);
-    background-size: 3.5rem 3.5rem;
-    -webkit-mask-image: radial-gradient(
-      ellipse 80% 62% at 50% 42%,
-      #000 25%,
-      transparent 78%
-    );
-    mask-image: radial-gradient(
-      ellipse 80% 62% at 50% 42%,
-      #000 25%,
-      transparent 78%
-    );
-  }
-
   /* พื้นหลังของ placeholder รูปภาพ (ใช้จนกว่าจะมีรูปจริง) */
   .grad-placeholder {
     background:
@@ -564,16 +652,6 @@
     box-shadow: var(--shadow-card);
   }
 
-  .btn-on-dark {
-    background: #ffffff;
-    color: var(--color-ink);
-  }
-
-  .btn-on-dark:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 36px -14px rgba(0, 0, 0, 0.5);
-  }
-
   /* Scroll reveal — สถานะเริ่มต้นถูกยกเลิกโดย <noscript> ใน layout */
   .reveal {
     opacity: 0;
@@ -609,22 +687,6 @@
 
   .anim-rise {
     animation: rise 850ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  /* รูปโปรไฟล์: ค่อย ๆ ขยายเข้ามา แล้วลอยขึ้นลงเบา ๆ (คนละชั้นกันเพื่อไม่ให้ transform ชนกัน) */
-  @keyframes photo-in {
-    from {
-      opacity: 0;
-      transform: scale(0.94);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  .anim-photo {
-    animation: photo-in 950ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   @keyframes float-y {
@@ -694,24 +756,6 @@
     animation: clip-up 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  /* เส้นบาง ๆ ที่ยืด-หด ใช้เป็นจังหวะข้างคำความสามารถ */
-  @keyframes scroll-hint {
-    0%,
-    100% {
-      transform: scaleY(0.25);
-      opacity: 0.35;
-    }
-    50% {
-      transform: scaleY(1);
-      opacity: 1;
-    }
-  }
-
-  .anim-scroll-hint {
-    transform-origin: top;
-    animation: scroll-hint 2.4s ease-in-out infinite;
-  }
-
   /* ก้อนแสงพื้นหลัง Landing ลอยช้ามาก ให้หน้าไม่นิ่งสนิทแต่ไม่รบกวนสายตา */
   @keyframes drift-a {
     0%,
@@ -752,11 +796,6 @@
     }
   }
 
-  .grad-text-anim {
-    background-size: 220% 100%;
-    animation: shimmer 10s ease-in-out infinite;
-  }
-
   /* ── แถบเลื่อนอัตโนมัติ (ใช้กับเกียรติบัตรและแถบคำวิ่งในหน้าแรก) ──
      เนื้อหาถูกวางซ้ำสองชุด แล้วเลื่อน -50% จึงต่อกันได้แบบไร้รอยต่อ
      ทุกชิ้นต้องมี margin ด้านขวา (ไม่ใช่ gap) ไม่งั้นจุดวนจะกระตุกไป 1 ช่องไฟ */
@@ -784,12 +823,63 @@
     animation: marquee-left linear infinite;
   }
 
-  /* ชี้เมาส์ที่แถวไหนก็ตาม ทุกแถวในกลุ่มเดียวกันหยุดพร้อมกัน
+  /* แถวไม่หยุดตอนชี้เมาส์ — การหยุดกะทันหันทำให้จังหวะของหน้าสะดุด
+     แต่ยังต้องหยุดตอน tab มาถึงด้วยคีย์บอร์ด ไม่งั้นผู้ใช้จะเล็งปุ่มที่วิ่งอยู่ไม่ได้
      ใช้ :focus-visible (ไม่ใช่ :focus-within) เพราะการคลิกด้วยเมาส์ทิ้งโฟกัสไว้ที่ปุ่ม
      ถ้าใช้ :focus-within แถวจะค้างไม่ยอมวิ่งต่อหลังปิดภาพ */
-  .marquee-group:hover .marquee-track,
   .marquee-group:has(:focus-visible) .marquee-track {
     animation-play-state: paused;
+  }
+
+  /* ── การ์ดเกียรติบัตร ──
+     ชี้เมาส์แล้วยกขึ้นพร้อมเรืองขอบฟ้า ให้รู้สึกว่า "กดได้" โดยไม่ต้องหยุดแถว
+     ใบอื่นในแถวเดียวกันจางลงเล็กน้อย สายตาจึงโฟกัสใบที่ชี้อยู่ */
+  .cert-card {
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 300ms ease,
+      opacity 300ms ease;
+  }
+
+  .marquee-track:hover .cert-card {
+    opacity: 0.55;
+  }
+
+  .cert-card:hover,
+  .cert-card:focus-visible {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.04);
+    border-color: var(--color-cyan);
+    box-shadow:
+      var(--shadow-lift),
+      0 0 0 3px rgba(8, 218, 255, 0.28);
+  }
+
+  /* แถบไล่สีบาง ๆ ที่ไหลผ่านใบที่ชี้อยู่ — ให้รู้สึกเป็นของมันวาว ไม่แบน */
+  .cert-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 70%
+    );
+    background-size: 260% 100%;
+    background-position: 130% 0;
+    opacity: 0;
+    transition:
+      opacity 260ms ease,
+      background-position 700ms ease;
+    pointer-events: none;
+  }
+
+  .cert-card:hover::after,
+  .cert-card:focus-visible::after {
+    opacity: 1;
+    background-position: -30% 0;
   }
 
   @keyframes marquee-left {
@@ -837,29 +927,31 @@ dialog.lightbox {
   overflow: hidden;
 }
 
+/* พื้นหลังดำสนิท — เป็นกลางกับรูปทุกโทน ไม่ย้อมสีภาพเหมือนพื้นน้ำเงินเดิม */
 dialog.lightbox::backdrop {
-  background: rgba(1, 0, 62, 0.86);
-  backdrop-filter: blur(8px);
-  animation: lb-fade 220ms ease-out both;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  animation: lb-fade 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* easing แบบ back-out — ขยายเลยขนาดจริงนิดหนึ่งแล้วค่อยเข้าที่ ให้รู้สึก "เด้ง" ขึ้นมา */
+/* เข้าแบบนุ่ม ๆ ไม่เด้งเลยขนาดจริง — ค่อย ๆ ขยายจาก 0.92 เข้าที่พร้อมลอยขึ้นเล็กน้อย
+   ใช้ ease-out ยาว ๆ แทน back-out จึงรู้สึกลื่นกว่าและไม่กระตุกตอนจบ */
 dialog.lightbox .lb-figure {
-  animation: lb-zoom 420ms cubic-bezier(0.34, 1.4, 0.5, 1) both;
+  animation: lb-zoom 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ปุ่มและคำบรรยายตามขึ้นมาทีหลังเล็กน้อย สายตาจึงไปหยุดที่รูปก่อน */
 dialog.lightbox .lb-controls {
-  animation: lb-rise 360ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+  animation: lb-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
 }
 
 dialog.lightbox.lb-closing::backdrop {
-  animation: lb-fade 170ms ease-in reverse both;
+  animation: lb-fade 220ms cubic-bezier(0.4, 0, 1, 1) reverse both;
 }
 
 dialog.lightbox.lb-closing .lb-figure,
 dialog.lightbox.lb-closing .lb-controls {
-  animation: lb-zoom-out 170ms ease-in both;
+  animation: lb-zoom-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
 }
 
 @keyframes lb-fade {
@@ -874,7 +966,7 @@ dialog.lightbox.lb-closing .lb-controls {
 @keyframes lb-zoom {
   from {
     opacity: 0;
-    transform: scale(0.86);
+    transform: scale(0.92) translateY(14px);
   }
   to {
     opacity: 1;
@@ -900,7 +992,7 @@ dialog.lightbox.lb-closing .lb-controls {
   }
   to {
     opacity: 0;
-    transform: scale(0.96);
+    transform: scale(0.95) translateY(10px);
   }
 }
 
@@ -928,6 +1020,17 @@ dialog.lightbox.lb-closing .lb-controls {
   .hero-tilt,
   .hero-parallax,
   .hero-magnet:hover {
+    transform: none;
+  }
+
+  /* ชิ้นตกแต่งที่เคลื่อนไหวให้หยุดนิ่งที่สถานะอ่านออกได้ */
+  .anim-twinkle {
+    opacity: 0.4;
+  }
+
+  /* ปุ่มกลับขึ้นบนยังต้องกดได้ แค่ไม่ต้องมี transition */
+  .to-top-hidden {
+    opacity: 0;
     transform: none;
   }
 

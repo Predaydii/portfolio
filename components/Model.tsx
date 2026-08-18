@@ -3,15 +3,39 @@ import Section from "./Section";
 import Reveal from "./Reveal";
 import FrameworkCards from "./FrameworkCards";
 import Collapsible from "./Collapsible";
+import TimelineRail from "./TimelineRail";
 import { model } from "@/lib/content";
-import { findImageIn } from "@/lib/images";
+import { findDownload, findImageIn } from "@/lib/images";
 
 export default function Model() {
   // โลโก้แนวยาว อ่านจาก public/images/model/logo.<png|jpg|webp|avif>
   const logo = findImageIn("model", "logo");
 
+  // ปุ่มดาวน์โหลดที่มาแทนปุ่ม "อ่านต่อ" หลังกางเนื้อหาครบแล้ว
+  // ไม่มีไฟล์ก็ไม่แสดงปุ่ม ผู้อ่านจึงไม่เจอปุ่มที่กดแล้วได้ 404
+  const doc = findDownload(model.document.file);
+
+  if (process.env.NODE_ENV === "development" && !doc) {
+    console.warn(
+      `[model] ปุ่ม "${model.document.label}" ถูกซ่อนไว้ เพราะยังไม่มีไฟล์ ` +
+        `public/images/${model.document.file}.<jpg|png|webp|avif|pdf>`,
+    );
+  }
+
+  const downloadButton = doc ? (
+    <a
+      href={doc}
+      download=""
+      className="btn btn-primary grad-brand hero-magnet btn-attract"
+    >
+      {model.document.label}
+      <span aria-hidden="true">↓</span>
+    </a>
+  ) : null;
+
   return (
-    <Section id="model" className="bg-mist">
+    // seam: ไล่สีจากขาวของ About ลงมาหา mist ไม่ให้เห็นเป็นเส้นคมพาดขวางจอ
+    <Section id="model" className="seam seam-from-white bg-mist">
       {/* ── โลโก้แนวยาวเปิดหัวเรื่อง ── */}
       <header className="text-center">
         <Reveal>
@@ -41,13 +65,14 @@ export default function Model() {
       {/* ── บทต่าง ๆ เรียงลงมาเป็นเรื่องเล่า มีเส้นแกนร้อยไว้ทางซ้าย ──
           ย่อไว้ก่อน ให้ผู้อ่านเลือกเองว่าจะกางอ่านต่อ หรือข้ามไปดูเกียรติบัตร */}
       <div className="mt-16 sm:mt-20">
-        <Collapsible collapsed="max-h-[34rem]" fade="from-mist via-mist/85">
+        <Collapsible
+          collapsed="max-h-[34rem]"
+          fade="from-mist via-mist/85"
+          expandedAction={downloadButton}
+        >
           <ol className="relative mx-auto max-w-[64rem]">
-        {/* เส้นแกนของเรื่อง */}
-        <span
-          aria-hidden="true"
-          className="grad-rail absolute top-2 bottom-2 left-[15px] w-0.5 rounded-full opacity-40 sm:left-[23px]"
-        />
+        {/* เส้นแกนของเรื่อง — ถูกวาดลงมาตามระยะที่ผู้อ่านเลื่อนผ่าน */}
+        <TimelineRail />
 
         {model.chapters.map((chapter) => (
           <li key={chapter.no} className="relative pb-14 pl-12 last:pb-0 sm:pl-20">
@@ -111,17 +136,6 @@ export default function Model() {
 
             {chapter.steps && <FrameworkCards />}
 
-            {chapter.cta && (
-              <Reveal delay={120}>
-                <a
-                  href={chapter.cta.href}
-                  className="btn btn-primary grad-brand mt-6"
-                >
-                  {chapter.cta.label}
-                  <span aria-hidden="true">→</span>
-                </a>
-              </Reveal>
-            )}
               </li>
             ))}
           </ol>
