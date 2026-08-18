@@ -137,7 +137,7 @@ export default function Hero() {
           {/* จอใหญ่เลื่อนบล็อกข้อความลงมา ให้ "I'm Day" อยู่เหนือกึ่งกลางจอเล็กน้อย
               ใช้ translate ไม่ใช่ margin เพราะ grid นี้เป็น items-center
               การเพิ่ม margin จะถูกนำไปคิดในการจัดกึ่งกลางด้วย ผลจึงเลื่อนแค่ครึ่งเดียว */}
-          <div className="relative z-20 order-2 text-center lg:order-1 lg:translate-y-24 lg:text-left">
+          <div className="relative z-20 order-2 text-center lg:order-1 lg:translate-y-14 lg:text-left">
             {/* แยก anim-rise ไว้ชั้นนอก เพราะทั้งสองคลาสตั้งค่า animation
                 ถ้าใส่รวมกัน ตัวที่มาทีหลังใน stylesheet จะทับเอฟเฟกต์ไล่สีทิ้ง
                 จอใหญ่ปล่อยให้ล้นออกไปทางขวาได้ (w-max) ตัวอักษรจึงพาดทับรูป */}
@@ -182,18 +182,19 @@ export default function Hero() {
             </h1>
 
             <p
-              className="anim-rise font-display mt-1 text-base font-bold text-ink sm:mt-3 sm:text-lg lg:text-xl"
+              className="anim-rise font-display mt-1 text-base font-bold text-ink sm:mt-1.5 sm:text-lg lg:text-xl"
               style={{ animationDelay: "620ms" }}
             >
               {profile.fullName}
               <span aria-hidden="true" className="mx-2 text-cyan-deep">
                 ·
               </span>
-              <span className="font-semibold text-slate">{profile.school}</span>
+              {/* สีเดียวกับชื่อ ต่างกันแค่น้ำหนักตัวอักษร */}
+              <span className="font-semibold text-ink">{profile.school}</span>
             </p>
 
             <div
-              className="anim-rise mt-2.5 max-w-[46ch] max-lg:mx-auto sm:mt-4"
+              className="anim-rise mt-2.5 max-w-[46ch] max-lg:mx-auto sm:mt-2.5"
               style={{ animationDelay: "700ms" }}
             >
               <p className="font-display text-base leading-snug font-bold text-ink sm:text-lg lg:text-xl">
@@ -206,7 +207,7 @@ export default function Hero() {
 
             <nav
               aria-label="ช่องทางติดต่อ"
-              className="anim-rise mt-3.5 sm:mt-5"
+              className="anim-rise mt-3.5 sm:mt-4"
               style={{ animationDelay: "780ms" }}
             >
               <ul className="flex items-center justify-center gap-2.5 lg:justify-start">
