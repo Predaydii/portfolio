@@ -126,14 +126,9 @@ export default function Footer() {
       </div>
 
       <div className="relative border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-5 sm:px-8 lg:px-12">
+        {/* ปุ่มกลับขึ้นบนแบบลอย (ScrollTop) ทำหน้าที่นี้อยู่แล้ว จึงไม่ต้องมีลิงก์ซ้ำ */}
+        <div className="mx-auto w-full max-w-[1200px] px-5 py-5 sm:px-8 lg:px-12">
           <p className="text-xs text-white/50">{footer.copyright}</p>
-          <a
-            href="#home"
-            className="font-display text-xs font-semibold tracking-wide text-white/50 transition-colors hover:text-cyan"
-          >
-            กลับขึ้นด้านบน ↑
-          </a>
         </div>
       </div>
     </footer>

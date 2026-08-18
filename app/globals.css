@@ -75,7 +75,7 @@
     /* ตัวเด่นที่สุดของหน้าแรก — ใหญ่กว่าชื่ออังกฤษด้านล่าง และวางทับอยู่ชั้นหน้า
        จำกัดด้วย vh ด้วย เพราะ Hero เป็น sticky ที่สูงได้ไม่เกิน 1 หน้าจอ
        ถ้าเนื้อหาสูงเกิน ส่วนล่างจะถูก About เลื่อนมาทับจนไม่มีวันเห็น */
-    font-size: min(clamp(3rem, 8.5vw, 6.5rem), 12vh);
+    font-size: min(clamp(3rem, 8.5vw, 6.5rem), 8vh);
     /* ตัวเอียงตัวใหญ่มีหางลง (y) และเอนไปทางขวา ถ้า line-height แคบหรือไม่เผื่อ
        ระยะขอบ กล่องข้อความจะตัดหางทิ้ง — เห็นชัดเป็นพิเศษเพราะใช้
        background-clip:text ซึ่งตัดสีตามกล่อง ไม่ใช่ตามรูปร่างตัวอักษร */
@@ -109,7 +109,7 @@
        ส่วน vh คุมความสูงไว้ไม่ให้เนื้อหาทั้งชุดล้นออกนอก sticky viewport */
     font-size: min(
       calc(clamp(2.25rem, 7vw, 5.5rem) * var(--mega-scale, 1)),
-      8.6vh
+      6.5vh
     );
     line-height: 0.88;
     letter-spacing: -0.05em;
@@ -134,6 +134,22 @@
   /* ฐานเป็นไล่สีนิ่ง ๆ ไม่มี animation — วาดครั้งเดียวจบ */
   .tech-canvas {
     background: linear-gradient(180deg, #ffffff 0%, #fafcff 55%, #f2f7fd 100%);
+  }
+
+  /* จอเตี้ยมาก (iPhone SE รุ่นแรก ฯลฯ) — หุบรูปและตัวอักษรลงอีกขั้น
+     Hero เป็น sticky สูงไม่เกิน 1 หน้าจอ อะไรที่ล้นออกไปจะถูก section ถัดไป
+     เลื่อนมาทับ ผู้ใช้จึงไม่มีวันเลื่อนลงไปเห็นไอคอนโซเชียลได้เลย */
+  @media (max-width: 639px) and (max-height: 640px) {
+    .hero-lead {
+      font-size: min(clamp(2.5rem, 8.5vw, 6.5rem), 7vh);
+    }
+
+    .hero-mega {
+      font-size: min(
+        calc(clamp(1.9rem, 7vw, 5.5rem) * var(--mega-scale, 1)),
+        5.6vh
+      );
+    }
   }
 
   /* มือถือใช้พื้นขาวล้วน ไม่มีไล่สีฟ้า
@@ -920,6 +936,15 @@
 
   .anim-aurora {
     animation: aurora 26s ease-in-out infinite;
+  }
+}
+
+/* จอเตี้ยมาก — หุบรูปหน้าแรกลงอีกขั้น
+   ต้องอยู่ "นอก" @layer เพราะ utility ของ Tailwind (w-[...]) อยู่ในเลเยอร์ที่
+   ชนะ components เสมอ กฎที่ไม่อยู่ในเลเยอร์ใดเลยจึงเป็นทางเดียวที่ทับมันได้ */
+@media (max-width: 639px) and (max-height: 640px) {
+  .hero-photo {
+    width: min(15rem, 24vh);
   }
 }
 

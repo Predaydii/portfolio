@@ -36,7 +36,7 @@ npm run lint
 | Statement of Purpose | `purpose` |
 | Certificate (หัวข้อ + ความเร็ววิ่ง) | `certificate` |
 | Project (หัวข้อ + การ์ด 6 ใบ) | `project` |
-| Model (D-D-D-I) | `model` · `framework` |
+| Framework (D-D-D-I) | `model` · `framework` |
 | Closing (ข้อความปิดท้าย ถัดจาก Project) | `closing` |
 | Footer | `footer` |
 

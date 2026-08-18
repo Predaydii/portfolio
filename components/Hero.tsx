@@ -40,7 +40,10 @@ export default function Hero() {
       id="hero"
       /* max-h คู่กับ min-h: Hero เป็น sticky จึงต้องไม่สูงเกิน 1 หน้าจอเด็ดขาด
          ไม่งั้นเนื้อหาส่วนล่างจะถูก About เลื่อนขึ้นมาทับจนไม่มีวันเห็น */
-      className="tech-canvas sticky top-0 z-0 flex h-[100svh] max-h-[100svh] flex-col justify-center overflow-hidden pt-20 pb-16 sm:pt-24 sm:pb-20"
+      /* มือถือจัดชิดบน ไม่ใช่กึ่งกลาง — เพราะพอรูปใหญ่ขึ้น การจัดกึ่งกลาง
+         จะดันชื่อไทยกับคติประจำใจลงไปอยู่ครึ่งล่างของจอ
+         จอ sm ขึ้นไปยังจัดกึ่งกลางเหมือนเดิม */
+      className="tech-canvas sticky top-0 z-0 flex h-[100svh] max-h-[100svh] flex-col justify-start overflow-hidden pt-20 pb-16 sm:justify-center sm:pt-24 sm:pb-20"
     >
       {/* ── ฉากหลังธีมเทคโนโลยี ── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -127,10 +130,14 @@ export default function Hero() {
       </div>
 
       <div className="relative mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-12">
-        <div className="grid items-center gap-6 sm:gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+        {/* มือถือ: ระยะระหว่างรูปกับข้อความแคบลง เพื่อดึงบล็อกข้อความขึ้นมาใกล้รูป */}
+        <div className="grid items-center gap-2 sm:gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* ── ข้อความฝั่งซ้าย ── จอเล็กลงมาอยู่ใต้รูปและจัดกึ่งกลาง
               z-20 ยกทั้งคอลัมน์ขึ้นชั้นหน้า "I'm Day" จึงทับรูปได้เวลาล้นไปทางขวา */}
-          <div className="relative z-20 order-2 text-center lg:order-1 lg:text-left">
+          {/* จอใหญ่เลื่อนบล็อกข้อความลงมา ให้ "I'm Day" อยู่เหนือกึ่งกลางจอเล็กน้อย
+              ใช้ translate ไม่ใช่ margin เพราะ grid นี้เป็น items-center
+              การเพิ่ม margin จะถูกนำไปคิดในการจัดกึ่งกลางด้วย ผลจึงเลื่อนแค่ครึ่งเดียว */}
+          <div className="relative z-20 order-2 text-center lg:order-1 lg:translate-y-24 lg:text-left">
             {/* แยก anim-rise ไว้ชั้นนอก เพราะทั้งสองคลาสตั้งค่า animation
                 ถ้าใส่รวมกัน ตัวที่มาทีหลังใน stylesheet จะทับเอฟเฟกต์ไล่สีทิ้ง
                 จอใหญ่ปล่อยให้ล้นออกไปทางขวาได้ (w-max) ตัวอักษรจึงพาดทับรูป */}
@@ -175,7 +182,7 @@ export default function Hero() {
             </h1>
 
             <p
-              className="anim-rise font-display mt-3 text-base font-bold text-ink sm:text-lg lg:text-xl"
+              className="anim-rise font-display mt-1 text-base font-bold text-ink sm:mt-3 sm:text-lg lg:text-xl"
               style={{ animationDelay: "620ms" }}
             >
               {profile.fullName}
@@ -186,7 +193,7 @@ export default function Hero() {
             </p>
 
             <div
-              className="anim-rise mt-4 max-w-[46ch] max-lg:mx-auto"
+              className="anim-rise mt-2.5 max-w-[46ch] max-lg:mx-auto sm:mt-4"
               style={{ animationDelay: "700ms" }}
             >
               <p className="font-display text-base leading-snug font-bold text-ink sm:text-lg lg:text-xl">
@@ -199,7 +206,7 @@ export default function Hero() {
 
             <nav
               aria-label="ช่องทางติดต่อ"
-              className="anim-rise mt-5"
+              className="anim-rise mt-3.5 sm:mt-5"
               style={{ animationDelay: "780ms" }}
             >
               <ul className="flex items-center justify-center gap-2.5 lg:justify-start">
@@ -224,7 +231,9 @@ export default function Hero() {
 
           {/* ── รูปฝั่งขวา พร้อมโครงลวดหมุนอยู่ด้านหลัง ── */}
           <div className="order-1 lg:order-2">
-            <div className="relative mx-auto w-44 sm:w-60 lg:mr-0 lg:ml-auto lg:w-[21rem]">
+            {/* มือถือ: ผูกขนาดกับความสูงจอด้วย เพราะรูปสัดส่วน 4:5 สูงกว่ากว้าง 25%
+                บนจอเตี้ย (เช่น 375x667) ถ้าล็อกความกว้างตายตัว ไอคอนโซเชียลจะล้นจอ */}
+            <div className="hero-photo relative mx-auto w-[min(15rem,30vh)] sm:w-64 lg:mr-0 lg:ml-auto lg:w-[21rem]">
               {/* วงแหวนประหมุนสวนทางกัน — ให้รูปรู้สึกเป็นศูนย์กลางของฉาก */}
               <span
                 aria-hidden="true"
@@ -282,7 +291,7 @@ export default function Hero() {
                       alt={profile.photoAlt}
                       fill
                       priority
-                      sizes="(min-width: 1024px) 21rem, (min-width: 640px) 15rem, 11rem"
+                      sizes="(min-width: 1024px) 21rem, (min-width: 640px) 16rem, 15rem"
                       className="object-contain"
                     />
                   ) : (

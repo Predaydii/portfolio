@@ -25,7 +25,10 @@ export default function FrameworkCards() {
                     ใช้ min-h แทนความสูงตายตัว และให้ข้อความย่อขนาดตามความกว้างการ์ด
                     ไม่งั้นชื่อขั้นจะล้นออกนอกแถบสีตอนการ์ดแคบ */}
                 <div
-                  className="step-bar relative flex min-h-11 items-center rounded-xl py-1.5 pr-2 pl-12 sm:min-h-13 sm:rounded-2xl sm:pr-3 sm:pl-16"
+                  /* ระยะซ้าย-ขวาเท่ากัน ชื่อขั้นจึงอยู่กึ่งกลาง "แถบ" จริง ๆ
+                     ตรงกับบรรทัดภาษาไทยด้านล่างที่กึ่งกลางการ์ดพอดี
+                     (เดิม pl มากกว่า pr เพื่อหลบไอคอน ทำให้ชื่อเยื้องไปทางขวา) */
+                  className="step-bar relative flex min-h-11 items-center rounded-xl px-12 py-1.5 sm:min-h-13 sm:rounded-2xl sm:px-16"
                   style={{
                     background: `linear-gradient(100deg, ${step.color} 0%, ${step.colorLight} 100%)`,
                   }}

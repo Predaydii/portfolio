@@ -57,7 +57,7 @@ export const site = {
 export const navItems: NavItem[] = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
-  { id: "model", label: "Model" },
+  { id: "framework", label: "Framework" },
   { id: "certificate", label: "Certificate" },
   { id: "project", label: "Project" },
   { id: "contact", label: "Contact" },
@@ -75,7 +75,7 @@ export const navItems: NavItem[] = [
  */
 export const profile = {
   /** ชื่อ-นามสกุลเต็ม ใช้ใน Footer และบรรทัดลิขสิทธิ์ */
-  fullName: "เปรมปรีดี บุญเนาว์",
+  fullName: "Prempridi Boonnao",
   /** คำนำหน้าบรรทัดบน แสดงเป็นตัวเอียง */
   greeting: "I'm",
   /** ชื่อสั้นต่อท้าย greeting แสดงเป็นตัวเอียงเช่นกัน */
@@ -194,7 +194,7 @@ export type ModelChapter = {
  * รองรับ .pdf เพิ่มจากนามสกุลรูป — ถ้ายังไม่มีไฟล์ ปุ่มจะไม่ถูกแสดง
  */
 export const model = {
-  eyebrow: "Model",
+  eyebrow: "Framework",
   /** ปุ่มที่มาแทนปุ่ม "อ่านต่อ" หลังผู้อ่านกางเนื้อหาจนครบแล้ว */
   document: { label: "ดาวน์โหลดเอกสาร", file: "dday-design-innovation" },
   /** ใช้เป็นหัวข้อสำหรับ screen reader และเป็นคำอธิบายรูปโลโก้ */

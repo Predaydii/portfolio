@@ -35,7 +35,7 @@ export default function Model() {
 
   return (
     // seam: ไล่สีจากขาวของ About ลงมาหา mist ไม่ให้เห็นเป็นเส้นคมพาดขวางจอ
-    <Section id="model" className="seam seam-from-white bg-mist">
+    <Section id="framework" className="seam seam-from-white bg-mist">
       {/* ── โลโก้แนวยาวเปิดหัวเรื่อง ── */}
       <header className="text-center">
         <Reveal>
