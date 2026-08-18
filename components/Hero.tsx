@@ -45,8 +45,8 @@ export default function Hero() {
       {/* ── ฉากหลังธีมเทคโนโลยี ── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         {/* ชั้นแสงหลากเฉดที่ลอยไปมา — กินพื้นที่เกินขอบไว้ให้ transform มีที่ขยับ
-            โดยไม่เผยขอบว่างที่มุมจอ */}
-        <div className="tech-aura absolute inset-[-10%]" />
+            โดยไม่เผยขอบว่างที่มุมจอ · มือถือไม่ใช้ ให้พื้นเป็นขาวล้วน */}
+        <div className="tech-aura absolute inset-[-10%] max-sm:hidden" />
 
         {/* พื้นตารางมุมมองลึกไหลเข้าหาคนดู */}
         <div className="tech-floor absolute inset-x-0 bottom-0 h-[46%]" />
@@ -57,12 +57,12 @@ export default function Hero() {
         {/* เส้นสแกนกวาดลงมา */}
         <div className="tech-scan absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ink/25 to-transparent" />
 
-        {/* ก้อนแสงลอยช้า ๆ */}
-        <div className="anim-drift-a absolute -top-28 -right-24 h-[30rem] w-[30rem] rounded-full bg-cyan/25 blur-3xl" />
-        <div className="anim-drift-b absolute -bottom-32 -left-24 h-[26rem] w-[26rem] rounded-full bg-ink/12 blur-3xl" />
+        {/* ก้อนแสงลอยช้า ๆ — ซ่อนบนมือถือ (ทั้งเรื่องสีและเรื่องภาระ blur) */}
+        <div className="anim-drift-a absolute -top-28 -right-24 h-[30rem] w-[30rem] rounded-full bg-cyan/25 blur-3xl max-sm:hidden" />
+        <div className="anim-drift-b absolute -bottom-32 -left-24 h-[26rem] w-[26rem] rounded-full bg-ink/12 blur-3xl max-sm:hidden" />
 
         {/* แถบแสงเฉียงกวาดผ่านทั้งฉาก */}
-        <div className="hero-beam anim-aurora absolute -inset-x-1/4 top-[22%] h-64 -rotate-6" />
+        <div className="hero-beam anim-aurora absolute -inset-x-1/4 top-[22%] h-64 -rotate-6 max-sm:hidden" />
 
         {/* จุดดาวกะพริบกระจายทั่วฉาก */}
         {STARS.map((star, i) => (

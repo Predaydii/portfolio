@@ -13,11 +13,20 @@ export default function Closing() {
   const photo = findImage("contact") ?? findImage("landing");
 
   return (
-    <Section id="closing" className="seam seam-from-white bg-mist">
+    // overflow-x-clip กันของตกแต่งที่ยื่นออกด้านข้างไม่ให้ดันหน้าจนเลื่อนไปทางขวาได้
+    // ใช้ clip ไม่ใช่ hidden เพราะ hidden จะทำให้ section กลายเป็น scroll container
+    <Section
+      id="closing"
+      className="seam seam-from-white overflow-x-clip bg-mist"
+    >
       <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.85fr)_1fr] lg:gap-16">
         {/* ── รูปสี่เหลี่ยมจัตุรัสฝั่งซ้าย ── */}
         <Reveal>
-          <div className="group relative mx-auto w-full max-w-[26rem] lg:mx-0">
+          {/* บนมือถือรูปกว้างเกือบเต็มคอนเทนเนอร์ ต้องหุบเข้ามาเปิดที่ให้วงแหวน
+              (-7%) กับลายวงจร (-1.5rem) ยื่นออกมาได้ ไม่งั้นมันล้นขอบจอ
+              แล้วทำให้ทั้งหน้าเลื่อนไปทางขวาได้ */}
+          <div className="px-7 sm:px-0">
+            <div className="group relative mx-auto w-full max-w-[26rem] lg:mx-0">
             {/* กรอบเส้นประหมุนช้า ๆ อยู่หลังรูป */}
             <span
               aria-hidden="true"
@@ -77,6 +86,7 @@ export default function Closing() {
                   </span>
                 </div>
               )}
+              </div>
             </div>
           </div>
         </Reveal>

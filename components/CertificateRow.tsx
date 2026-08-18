@@ -87,10 +87,12 @@ export default function CertificateRow({
                     className="object-cover transition-transform duration-700 ease-out group-hover/cert:scale-[1.07]"
                   />
 
-                  {/* ไอคอนขยายโผล่ตอนชี้ — บอกว่ากดแล้วดูเต็มจอได้ */}
+                  {/* ไอคอนขยายโผล่ตอนชี้ — บอกว่ากดแล้วดูเต็มจอได้
+                      ไม่ใช้ backdrop-blur เพราะมี 34 ใบในแถวที่วิ่งตลอดเวลา
+                      GPU มือถือแบกไม่ไหว และจอสัมผัสไม่มี hover ให้ใช้อยู่แล้ว */}
                   <span
                     aria-hidden="true"
-                    className="absolute inset-0 flex items-center justify-center bg-ink/35 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover/cert:opacity-100 group-focus-visible/cert:opacity-100"
+                    className="absolute inset-0 flex items-center justify-center bg-ink/45 opacity-0 transition-opacity duration-300 group-hover/cert:opacity-100 group-focus-visible/cert:opacity-100"
                   >
                     <span className="flex h-10 w-10 scale-75 items-center justify-center rounded-full bg-white/95 text-base text-ink shadow-lift transition-transform duration-300 group-hover/cert:scale-100 group-focus-visible/cert:scale-100">
                       ⤢

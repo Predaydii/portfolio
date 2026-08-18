@@ -136,6 +136,15 @@
     background: linear-gradient(180deg, #ffffff 0%, #fafcff 55%, #f2f7fd 100%);
   }
 
+  /* มือถือใช้พื้นขาวล้วน ไม่มีไล่สีฟ้า
+     ชั้นแสงสีที่เหลือถูกซ่อนด้วย max-sm:hidden ที่ตัว element ใน Hero.tsx
+     ได้ผลพลอยได้เป็นการตัดงาน blur ก้อนใหญ่หลายชั้นออกจาก GPU มือถือด้วย */
+  @media (max-width: 639px) {
+    .tech-canvas {
+      background: #ffffff;
+    }
+  }
+
   /* ชั้นแสงหลากเฉดที่ลอยไปมาช้า ๆ
      ขยับด้วย transform (เบราว์เซอร์ยกขึ้น GPU layer ได้) แทนการขยับ
      background-position ซึ่งบังคับให้วาดพื้นหลังเต็มจอใหม่ทุกเฟรม

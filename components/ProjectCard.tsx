@@ -30,15 +30,17 @@ export default function ProjectCard({ card, images }: Props) {
               sizes="(min-width: 1024px) 352px, (min-width: 640px) 45vw, 90vw"
               className="card-img-fade object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             />
-            {/* สำเนาที่เบลอ โผล่แค่ช่วงที่รูปกำลังละลาย ทำให้ขอบล่างนุ่มขึ้น */}
+            {/* สำเนาที่เบลอ โผล่แค่ช่วงที่รูปกำลังละลาย ทำให้ขอบล่างนุ่มขึ้น
+                ข้ามบนมือถือ — filter:blur() คูณ 9 การ์ดหนักเกินไปสำหรับ GPU มือถือ
+                และได้ผลตอบแทนน้อยมากบนจอเล็ก ตัว mask ก็ทำให้ขอบนุ่มอยู่แล้ว */}
             <Image
               src={main.src}
               alt=""
               aria-hidden="true"
               fill
               loading="lazy"
-              sizes="(min-width: 1024px) 352px, (min-width: 640px) 45vw, 90vw"
-              className="card-img-blur object-cover"
+              sizes="(min-width: 640px) 45vw, 1px"
+              className="card-img-blur hidden object-cover sm:block"
             />
           </>
         ) : (
@@ -56,7 +58,7 @@ export default function ProjectCard({ card, images }: Props) {
         {/* นับเฉพาะภาพ "เพิ่มเติม" ไม่รวมรูปหลักที่เห็นอยู่บนการ์ดแล้ว
             บอกสิ่งที่จะได้เพิ่มเมื่อกด ตรงกว่าการบอกจำนวนรวมทั้งหมด */}
         {main && extras > 0 && (
-          <span className="font-display absolute top-3 left-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.7rem] font-semibold text-white backdrop-blur-sm">
+          <span className="font-display absolute top-3 left-3 rounded-full bg-ink/80 px-2.5 py-1 text-[0.7rem] font-semibold text-white">
             {extras} ภาพเพิ่มเติม
           </span>
         )}
@@ -65,7 +67,7 @@ export default function ProjectCard({ card, images }: Props) {
         {main && (
           <span
             aria-hidden="true"
-            className="absolute top-3 right-3 flex h-9 w-9 scale-90 items-center justify-center rounded-full bg-ink/75 text-white opacity-0 backdrop-blur-sm transition-[opacity,transform] duration-300 group-hover:scale-100 group-hover:opacity-100"
+            className="absolute top-3 right-3 flex h-9 w-9 scale-90 items-center justify-center rounded-full bg-ink/85 text-white opacity-0 transition-[opacity,transform] duration-300 group-hover:scale-100 group-hover:opacity-100"
           >
             ↗
           </span>
