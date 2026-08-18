@@ -1,0 +1,15 @@
+ไอคอนของการ์ด D-D-D-I ใต้ส่วน Statement of Purpose
+
+ตั้งชื่อไฟล์ให้ตรงกับชื่อขั้นตอนใน framework.steps ของ lib/content.ts
+(ไม่สนตัวพิมพ์เล็ก-ใหญ่)
+
+  Discover.png
+  Design.png
+  Develop.png
+  Innovate.png
+
+แนะนำ PNG พื้นโปร่งใส จัตุรัส เช่น 128×128px
+ไอคอนจะถูกวางกลางวงกลมสีขาวขนาด 56px แสดงที่ 32×32px
+ถ้ายังไม่มีไฟล์ จะขึ้นตัวอักษรแรกของชื่อขั้นแทน
+
+นามสกุลที่ใช้ได้: .png .jpg .jpeg .webp .avif
