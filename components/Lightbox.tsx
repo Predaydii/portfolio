@@ -41,6 +41,42 @@ export default function Lightbox({
   const current = images[index];
   const many = images.length > 1;
 
+  /* สถานะ "โหลดเสร็จหรือยัง" ของรูปที่กำลังดู ใช้ตัดสินว่าจะโชว์ตัวหมุนไหม
+     ผูก event กับ element ตรง ๆ แทนการใช้ prop onLoad เพราะรูปที่อยู่ใน cache
+     จะโหลดเสร็จก่อน React ผูก handler ทัน ตัวหมุนจะค้างอยู่ตลอดไป
+     จึงต้องเช็ค .complete ตอนเริ่มด้วย ไม่ใช่รอแต่ event */
+  const imgRef = useRef<HTMLImageElement>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const el = imgRef.current;
+    if (!el) return;
+
+    if (el.complete) {
+      setLoaded(true);
+      return;
+    }
+
+    setLoaded(false);
+    const done = () => setLoaded(true);
+    el.addEventListener("load", done);
+    el.addEventListener("error", done);
+    return () => {
+      el.removeEventListener("load", done);
+      el.removeEventListener("error", done);
+    };
+  }, [index]);
+
+  // รูปก่อนหน้าและถัดไป — วนรอบ และตัดตัวซ้ำออกเผื่อมีอยู่แค่สองรูป
+  const neighbours = many
+    ? [
+        ...new Set([
+          images[(index + 1) % images.length]?.src,
+          images[(index - 1 + images.length) % images.length]?.src,
+        ]),
+      ].filter((src): src is string => Boolean(src) && src !== current?.src)
+    : [];
+
   useEffect(() => {
     onCloseRef.current = onClose;
   });
@@ -150,14 +186,48 @@ export default function Lightbox({
         </button>
 
         <figure className="lb-figure relative min-h-0 w-full flex-1">
+          {/* วงกลมหมุนใต้รูป — เห็นเฉพาะช่วงที่ไฟล์ยังมาไม่ถึง
+              ไม่งั้นผู้ใช้จะเจอจอดำเปล่า ๆ แล้วนึกว่ากดพลาด */}
+          {!loaded && (
+            <span
+              aria-hidden="true"
+              className="absolute top-1/2 left-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 animate-spin rounded-full border-2 border-white/25 border-t-white/80"
+            />
+          )}
+
           <Image
+            key={current.src}
             src={current.src}
             alt={current.alt}
             fill
-            sizes="92vw"
+            /* ต้นฉบับกว้างราว 1700px การขอ 1920 จึงเป็นการขยายภาพขึ้นเปล่า ๆ
+               จำกัดไว้ที่ 1200 ไฟล์เล็กลงมากโดยตายังแยกไม่ออกบนจอทั่วไป */
+            sizes="(min-width: 1280px) 1200px, 92vw"
             className="object-contain"
             priority
+            ref={imgRef}
           />
+
+          {/* โหลดรูปติดกันไว้ล่วงหน้า กดลูกศรหรือปัดแล้วภาพมาทันที
+              ต้องอยู่ในเลย์เอาต์จริง (ไม่ใช่ display:none) ด้วยสองเหตุผล —
+              เบราว์เซอร์ไม่ดาวน์โหลดรูปที่ display:none และถ้าไม่มีขนาดให้คำนวณ
+              มันจะเลือกไฟล์ใหญ่สุดจาก srcset แทนที่จะเลือกตาม sizes
+              จึงซ่อนด้วย opacity แทน แล้วกันไม่ให้รับเมาส์หรือถูกอ่านออกเสียง */}
+          {neighbours.map((src) => (
+            <Image
+              key={src}
+              src={src}
+              alt=""
+              aria-hidden="true"
+              fill
+              /* eager เพราะเป็นการโหลดล่วงหน้าโดยตั้งใจ
+                 ถ้าปล่อยเป็น lazy เบราว์เซอร์จะรอจนกว่าจะ "เห็น" ซึ่งไม่มีวันเกิด
+                 เพราะรูปโปร่งใสอยู่ใต้รูปหลักตลอด */
+              loading="eager"
+              sizes="(min-width: 1280px) 1200px, 92vw"
+              className="pointer-events-none object-contain opacity-0"
+            />
+          ))}
         </figure>
 
         {many && (

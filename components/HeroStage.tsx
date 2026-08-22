@@ -10,7 +10,6 @@ type Props = {
 
 /**
  * ห่อหน้าแรกไว้เพื่อรับตำแหน่งเมาส์ แล้วส่งต่อเป็น CSS variable ให้ชั้นต่าง ๆ ใช้
- *   --mx / --my        ตำแหน่งเมาส์เป็น % ใช้กับไฟสปอตไลต์
  *   --tilt-x / --tilt-y องศาที่รูปเอียงตามเมาส์
  *   --shift            ระยะที่ชั้นตกแต่งขยับสวนทางเมาส์ (parallax)
  *
@@ -33,8 +32,6 @@ export default function HeroStage({ id, className = "", children }: Props) {
 
     const apply = () => {
       frame = 0;
-      el.style.setProperty("--mx", `${x}%`);
-      el.style.setProperty("--my", `${y}%`);
       el.style.setProperty("--tilt-y", `${(x - 50) * 0.1}deg`);
       el.style.setProperty("--tilt-x", `${(38 - y) * 0.08}deg`);
       el.style.setProperty("--shift", `${(x - 50) * 0.22}px`);

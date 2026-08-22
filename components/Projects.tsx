@@ -19,7 +19,7 @@ export default function Projects() {
 
   return (
     // seam: ไล่สีจาก mist ของ Certificates ลงมาหาขาว
-    <Section id="project" className="seam seam-from-mist bg-white">
+    <Section id="project" aura="ink" className="seam seam-from-mist bg-white">
       <header className="mx-auto max-w-2xl text-center">
         <Reveal>
           <p className="t-eyebrow">{project.eyebrow}</p>

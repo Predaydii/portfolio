@@ -8,6 +8,7 @@ export default function About() {
     // ขอบบนมนและเงาด้านบน ทำให้เห็นชัดว่าส่วนนี้กำลังเลื่อนขึ้นมาทับ Landing
     <Section
       id="about"
+      aura="ink"
       className="rounded-t-[2rem] bg-white shadow-[0_-24px_60px_-30px_rgba(1,0,62,0.45)] sm:rounded-t-[2.5rem]"
     >
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,15rem)_1fr] lg:gap-20">

@@ -1,8 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
-import Lightbox from "./Lightbox";
 import type { GalleryImage } from "@/lib/content";
 
 type Props = {
@@ -12,6 +8,13 @@ type Props = {
   /** คลาสความสูงของเกียรติบัตร ความกว้างคำนวณจากสัดส่วน A4 แนวนอนให้เอง */
   heightClass: string;
   label: string;
+  /**
+   * ลำดับเริ่มต้นของแถวนี้ในรายการรวมทุกแถว
+   * ใช้บวกกับลำดับในแถว เพื่อบอกตัวแม่ว่าเป็นรูปที่เท่าไหร่ของทั้งหมด
+   * ผู้ใช้จึงกดดูรูปเดียวแล้วเลื่อนดูได้ครบทุกแถว ไม่ติดอยู่แค่แถวที่กด
+   */
+  offset: number;
+  onOpen: (indexInAll: number) => void;
 };
 
 /** สัดส่วนกระดาษ A4 แนวนอน (297 × 210 มม.) */
@@ -25,9 +28,9 @@ export default function CertificateRow({
   duration,
   heightClass,
   label,
+  offset,
+  onOpen,
 }: Props) {
-  const [openAt, setOpenAt] = useState<number | null>(null);
-
   if (images.length === 0) {
     return (
       <div className="marquee" aria-hidden="true">
@@ -55,8 +58,7 @@ export default function CertificateRow({
   const loop = [...images, ...images];
 
   return (
-    <>
-      <div className="marquee">
+    <div className="marquee">
         <ul
           className="marquee-track"
           style={{ animationDuration: `${duration}s` }}
@@ -73,7 +75,7 @@ export default function CertificateRow({
               >
                 <button
                   type="button"
-                  onClick={() => setOpenAt(index)}
+                  onClick={() => onOpen(offset + index)}
                   tabIndex={isClone ? -1 : undefined}
                   aria-label={`ดูเกียรติบัตรขนาดเต็ม: ${image.alt}`}
                   className={`cert-card group/cert relative block cursor-zoom-in overflow-hidden rounded-xl border border-line bg-white shadow-card ${heightClass} ${A4_LANDSCAPE}`}
@@ -103,16 +105,6 @@ export default function CertificateRow({
             );
           })}
         </ul>
-      </div>
-
-      {openAt !== null && (
-        <Lightbox
-          images={images}
-          index={openAt}
-          onIndexChange={setOpenAt}
-          onClose={() => setOpenAt(null)}
-        />
-      )}
-    </>
+    </div>
   );
 }

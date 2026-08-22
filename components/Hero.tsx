@@ -1,8 +1,9 @@
 import Image from "next/image";
 import HeroStage from "./HeroStage";
+import HeroStats from "./HeroStats";
 import BrandIcon from "./BrandIcon";
-import { footer, profile } from "@/lib/content";
-import { findImage } from "@/lib/images";
+import { footer, profile, project } from "@/lib/content";
+import { findAllNumbered, findImage } from "@/lib/images";
 
 /** รูปทรงโครงลวดที่หมุนอยู่หลังรูป — เส้นหนา มุมมน คล้ายกรอบวาดมือ */
 const WIRE_PATH =
@@ -33,6 +34,19 @@ export default function Hero() {
   const longestWord = Math.max(...headlineWords.map((w) => w.length), 1);
   const megaScale = Math.min(1, 10 / longestWord);
 
+  // ตัวเลขนับจากของจริง — เพิ่มรูปเกียรติบัตรหรือการ์ดโปรเจกต์แล้วตัวเลขขยับตามเอง
+  const stats = [
+    {
+      value:
+        findAllNumbered("certificate1").length +
+        findAllNumbered("certificate2").length,
+      label: profile.stats.certificates,
+    },
+    { value: project.cards.length, label: profile.stats.projects },
+    // D-D-D-I เป็นเฟรมเวิร์คเดียวที่สังเคราะห์ขึ้นมา — นับเป็น 1 ไม่ใช่จำนวนขั้น
+    { value: 1, label: profile.stats.framework },
+  ];
+
   return (
     /* sticky ตรึง Landing ไว้ แล้วปล่อยให้ Statement of Purpose เลื่อนขึ้นมาทับตอน scroll
        HeroStage เป็น client component ที่คอยส่งตำแหน่งเมาส์ให้ชั้นต่าง ๆ ใช้ */
@@ -53,9 +67,6 @@ export default function Hero() {
 
         {/* พื้นตารางมุมมองลึกไหลเข้าหาคนดู */}
         <div className="tech-floor absolute inset-x-0 bottom-0 h-[46%]" />
-
-        {/* ไฟสปอตไลต์ตามเมาส์ */}
-        <div className="hero-spotlight absolute inset-0" />
 
         {/* เส้นสแกนกวาดลงมา */}
         <div className="tech-scan absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ink/25 to-transparent" />
@@ -134,10 +145,10 @@ export default function Hero() {
         <div className="grid items-center gap-2 sm:gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* ── ข้อความฝั่งซ้าย ── จอเล็กลงมาอยู่ใต้รูปและจัดกึ่งกลาง
               z-20 ยกทั้งคอลัมน์ขึ้นชั้นหน้า "I'm Day" จึงทับรูปได้เวลาล้นไปทางขวา */}
-          {/* จอใหญ่เลื่อนบล็อกข้อความลงมา ให้ "I'm Day" อยู่เหนือกึ่งกลางจอเล็กน้อย
+          {/* จอคอมเลื่อนคอลัมน์ข้อความลงมา ให้ "I'm Day" กับแถบตัวเลขไม่ลอยอยู่บนเกินไป
               ใช้ translate ไม่ใช่ margin เพราะ grid นี้เป็น items-center
               การเพิ่ม margin จะถูกนำไปคิดในการจัดกึ่งกลางด้วย ผลจึงเลื่อนแค่ครึ่งเดียว */}
-          <div className="relative z-20 order-2 text-center lg:order-1 lg:translate-y-14 lg:text-left">
+          <div className="relative z-20 order-2 text-center lg:order-1 lg:translate-y-12 lg:text-left">
             {/* แยก anim-rise ไว้ชั้นนอก เพราะทั้งสองคลาสตั้งค่า animation
                 ถ้าใส่รวมกัน ตัวที่มาทีหลังใน stylesheet จะทับเอฟเฟกต์ไล่สีทิ้ง
                 จอใหญ่ปล่อยให้ล้นออกไปทางขวาได้ (w-max) ตัวอักษรจึงพาดทับรูป */}
@@ -150,8 +161,14 @@ export default function Hero() {
               </p>
             </div>
 
+            {/* ── แผงตัวเลข 3 ช่อง ── วางต่อจาก "I'm Day" ทันที
+                เฉพาะจอที่แตกเป็นสองคอลัมน์แล้ว เพราะบนมือถือ Hero เต็มพอดีอยู่แล้ว
+                ถ้าใส่เพิ่มจะดันไอคอนตกขอบจอ ซึ่ง sticky ทำให้เลื่อนลงไปดูไม่ได้
+                ไม่มี "+" ต่อท้าย — ตัวเลขนับจากของจริงทั้งหมด */}
+            <HeroStats stats={stats} />
+
             <h1
-              className="hero-mega mt-2"
+              className="hero-mega mt-2 lg:mt-0"
               style={{ "--mega-scale": megaScale } as React.CSSProperties}
             >
               {headlineWords.map((word, wordIndex) => {
@@ -182,7 +199,7 @@ export default function Hero() {
             </h1>
 
             <p
-              className="anim-rise font-display mt-1 text-base font-bold text-ink sm:mt-1.5 sm:text-lg lg:text-xl"
+              className="anim-rise font-display mt-1 text-base font-bold text-ink sm:mt-1.5 sm:text-lg lg:mt-0.5 lg:text-xl"
               style={{ animationDelay: "620ms" }}
             >
               {profile.fullName}
@@ -194,7 +211,7 @@ export default function Hero() {
             </p>
 
             <div
-              className="anim-rise mt-2.5 max-w-[46ch] max-lg:mx-auto sm:mt-2.5"
+              className="anim-rise mt-2.5 max-w-[46ch] max-lg:mx-auto sm:mt-2.5 lg:mt-1.5"
               style={{ animationDelay: "700ms" }}
             >
               <p className="font-display text-base leading-snug font-bold text-ink sm:text-lg lg:text-xl">
@@ -205,10 +222,30 @@ export default function Hero() {
               </p>
             </div>
 
+            {/* ── ปุ่มหลัก ── เฉพาะจอเล็ก จอคอมมีเมนูด้านบนอยู่แล้ว ปุ่มจึงซ้ำซ้อน */}
+            <div
+              className="anim-rise mt-5 flex flex-wrap items-center justify-center gap-3 lg:hidden"
+              style={{ animationDelay: "760ms" }}
+            >
+              <a
+                href={profile.actions.primary.href}
+                className="btn btn-primary grad-brand hero-magnet btn-attract"
+              >
+                {profile.actions.primary.label}
+                <span aria-hidden="true">→</span>
+              </a>
+              <a
+                href={profile.actions.secondary.href}
+                className="btn btn-ghost hero-magnet"
+              >
+                {profile.actions.secondary.label}
+              </a>
+            </div>
+
             <nav
               aria-label="ช่องทางติดต่อ"
-              className="anim-rise mt-3.5 sm:mt-4"
-              style={{ animationDelay: "780ms" }}
+              className="hero-social anim-rise mt-4 sm:mt-5 lg:mt-3"
+              style={{ animationDelay: "840ms" }}
             >
               <ul className="flex items-center justify-center gap-2.5 lg:justify-start">
                 {footer.links.map((link) => (
@@ -228,13 +265,15 @@ export default function Hero() {
                 ))}
               </ul>
             </nav>
+
           </div>
 
           {/* ── รูปฝั่งขวา พร้อมโครงลวดหมุนอยู่ด้านหลัง ── */}
           <div className="order-1 lg:order-2">
             {/* มือถือ: ผูกขนาดกับความสูงจอด้วย เพราะรูปสัดส่วน 4:5 สูงกว่ากว้าง 25%
                 บนจอเตี้ย (เช่น 375x667) ถ้าล็อกความกว้างตายตัว ไอคอนโซเชียลจะล้นจอ */}
-            <div className="hero-photo relative mx-auto w-[min(15rem,30vh)] sm:w-64 lg:mr-0 lg:ml-auto lg:w-[21rem]">
+            {/* จอใหญ่ให้รูปโตขึ้น ถ่วงกับคอลัมน์ข้อความที่ยาวขึ้นจากปุ่มและแถบตัวเลข */}
+            <div className="hero-photo relative mx-auto w-[min(15rem,30vh)] sm:w-64 lg:mr-0 lg:ml-auto lg:w-[24rem]">
               {/* วงแหวนประหมุนสวนทางกัน — ให้รูปรู้สึกเป็นศูนย์กลางของฉาก */}
               <span
                 aria-hidden="true"
@@ -292,7 +331,7 @@ export default function Hero() {
                       alt={profile.photoAlt}
                       fill
                       priority
-                      sizes="(min-width: 1024px) 21rem, (min-width: 640px) 16rem, 15rem"
+                      sizes="(min-width: 1024px) 24rem, (min-width: 640px) 16rem, 15rem"
                       className="object-contain"
                     />
                   ) : (

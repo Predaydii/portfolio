@@ -1,5 +1,6 @@
 import Reveal from "./Reveal";
-import CertificateRow from "./CertificateRow";
+import CertificateGallery from "./CertificateGallery";
+import SectionAura from "./SectionAura";
 import { certificate } from "@/lib/content";
 import {
   findAllNumbered,
@@ -42,8 +43,13 @@ export default function Certificates() {
 
   return (
     // ไม่ใช้ Section เพราะแถวเกียรติบัตรต้องกินเต็มความกว้างจอ ไม่ติด container
-    <section id="certificate" className="overflow-hidden bg-mist py-20 sm:py-28">
-      <header className="mx-auto max-w-2xl px-5 text-center sm:px-8">
+    <section
+      id="certificate"
+      className="relative overflow-hidden bg-mist py-20 sm:py-28"
+    >
+      <SectionAura tone="ink" />
+
+      <header className="relative z-10 mx-auto max-w-2xl px-5 text-center sm:px-8">
         <Reveal>
           <p className="t-eyebrow">{certificate.eyebrow}</p>
           <h2 className="t-section mt-4">{certificate.heading}</h2>
@@ -62,21 +68,14 @@ export default function Certificates() {
       </header>
 
       {/* สองแถววิ่งไปทางซ้าย แถวบนช้ากว่าแถวล่าง
-          .marquee-group ทำให้ชี้เมาส์แถวไหนก็หยุดทั้งสองแถวพร้อมกัน */}
-      <div className="marquee-group mt-12 space-y-4 sm:mt-16 sm:space-y-5">
-        <CertificateRow
-          images={top}
-          duration={certificate.topSpeed}
-          heightClass="h-36 sm:h-44 lg:h-52"
-          label="เกียรติบัตรแถวบน"
-        />
-        <CertificateRow
-          images={bottom}
-          duration={certificate.bottomSpeed}
-          heightClass="h-36 sm:h-44 lg:h-52"
-          label="เกียรติบัตรแถวล่าง"
-        />
-      </div>
+          กดใบไหนก็เปิดรายการรวมของทั้งสองแถว ผู้ใช้จึงเลื่อนดูได้ครบ
+          ไม่ต้องปิดแล้วไปกดอีกแถวเพื่อดูที่เหลือ */}
+      <CertificateGallery
+        top={top}
+        bottom={bottom}
+        topSpeed={certificate.topSpeed}
+        bottomSpeed={certificate.bottomSpeed}
+      />
     </section>
   );
 }

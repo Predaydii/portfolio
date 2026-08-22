@@ -17,6 +17,7 @@ export default function Closing() {
     // ใช้ clip ไม่ใช่ hidden เพราะ hidden จะทำให้ section กลายเป็น scroll container
     <Section
       id="closing"
+      aura="cyan"
       className="seam seam-from-white overflow-x-clip bg-mist"
     >
       <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.85fr)_1fr] lg:gap-16">
@@ -37,20 +38,20 @@ export default function Closing() {
             {/* กรอบทึบเยื้องออกไปด้านหลัง — ขยับเข้าหารูปเมื่อชี้เมาส์ */}
             <span
               aria-hidden="true"
-              className="absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] border-2 border-cyan/45 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:translate-y-2"
+              className="absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] border-2 border-ink/25 transition-transform duration-500 ease-out group-hover:translate-x-2 group-hover:translate-y-2"
             />
 
-            {/* แสงฟ้าเต้นอยู่หลังรูป */}
+            {/* เงานุ่ม ๆ เต้นอยู่หลังรูป — ใช้กรมไม่ใช่ฟ้า สีฟ้าสงวนไว้ให้หน้าแรก */}
             <span
               aria-hidden="true"
-              className="anim-glow absolute inset-[8%] -z-10 rounded-full bg-cyan/30 blur-3xl"
+              className="anim-glow absolute inset-[8%] -z-10 rounded-full bg-ink/15 blur-3xl"
             />
 
             {/* ลายวงจรเส้นประวิ่ง โผล่พ้นมุมล่างซ้ายของรูป */}
             <svg
               viewBox="0 0 300 200"
               aria-hidden="true"
-              className="absolute -bottom-6 -left-6 h-20 w-28 text-cyan-deep/45 sm:h-24 sm:w-36"
+              className="absolute -bottom-6 -left-6 h-20 w-28 text-ink/30 sm:h-24 sm:w-36"
               fill="none"
             >
               <path
